@@ -1,7 +1,11 @@
 
 
-import {View} from "../core/View";
 import {INotification} from "../core/INotification";
+import {View} from "../core/View";
+import {ISignal} from "../core/ISignal";
+import {ViewComponent} from "../core/ViewComponent";
+import {SystemConstants} from "../core/SystemConstants";
+import {PropertyDefinitions} from "./PropertyDefinitions";
 
 
 
@@ -9,24 +13,35 @@ import {INotification} from "../core/INotification";
 
 
 export class PropertyDefinitionsView extends View {
-
+    private propertyDefinitions: ViewComponent;
+    private propertyDefinitionsContainer: HTMLElement;
 
 
     constructor() {
         super( "PropertyDefinitionsView" );
 
+        this.container = document.createElement( "div" );
+        this.container.id = "property-definitions-view-container";
+
+        document.getElementById( SystemConstants.MAIN_CONTAINER ).appendChild( this.container );
+
+        this.propertyDefinitionsContainer = document.createElement( "div" );
+
+        this.container.appendChild( this.propertyDefinitionsContainer );
+
+        this.propertyDefinitions = new PropertyDefinitions( this, this.propertyDefinitionsContainer );
+
+    }
+
+
+    public enterScene(): void {
+
+
     }
 
 
 
-    private registerEventListeners(): void {
-
-
-    }
-
-
-
-    private unregisterEventListeners(): void {
+    public exitScene(exitType: string): void {
 
 
     }
@@ -37,21 +52,6 @@ export class PropertyDefinitionsView extends View {
         let notifications = super.listNotificationInterests();
 
         return notifications;
-    }
-
-
-
-    public enterScene(): void {
-        this.registerEventListeners();
-
-
-    }
-
-
-
-    public exitScene(exitType: string): void {
-        this.unregisterEventListeners();
-
     }
 
 
@@ -67,4 +67,18 @@ export class PropertyDefinitionsView extends View {
         }
 
     }
+
+
+
+    public handleSignal(signal: ISignal) {
+        console.log( "Signal received in " + this.NAME + ": " + signal.name );
+
+        switch ( signal.name ) {
+
+            default:
+                break;
+        }
+
+    }
+
 }

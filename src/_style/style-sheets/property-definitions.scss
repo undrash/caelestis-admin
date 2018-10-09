@@ -1,0 +1,43 @@
+
+@import "color-variables";
+
+
+#property-definitions-view-container {
+
+  margin: 50px;
+
+  #property-definitions-title {
+    font-size: 20px;
+    margin-bottom: 25px;
+  }
+
+  #property-definitions-header {
+    background-color: $primary-color;
+    padding: 20px;
+
+
+    #property-header-name {
+      display: inline;
+      margin-left: 20px;
+    }
+
+    #property-header-data-type {
+      display: inline;
+      float: right;
+      margin-right: 20px;
+    }
+
+  }
+
+
+  #property-definitions-container {
+    min-height: 200px;
+    background-color: $primary-color;
+    margin-top: 25px;
+    font-size: 15px;
+    text-align: center;
+    line-height: 200px;
+  }
+
+
+}

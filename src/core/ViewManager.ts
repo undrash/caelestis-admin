@@ -1,5 +1,6 @@
 
 
+import { PropertyDefinitionsView } from "../property-definitions/PropertyDefinitionsView";
 import { MainMenuView } from "../main-menu/MainMenuView";
 import { INotification } from "./INotification";
 import { ViewExitTypes } from "./ViewExitTypes";
@@ -24,6 +25,7 @@ export class ViewManager extends CoreEntity {
 
     private initView(): void {
         this.mainMenuView = new MainMenuView();
+        this.currentView = new PropertyDefinitionsView();
     }
 
 

@@ -109,6 +109,25 @@ exports.push([module.i, "#menu-container {\n  float: left;\n  width: 300px;\n  h
 
 /***/ }),
 
+/***/ "./node_modules/css-loader/index.js!./node_modules/sass-loader/lib/loader.js!./src/_style/style-sheets/property-definitions.scss":
+/*!******************************************************************************************************************************!*\
+  !*** ./node_modules/css-loader!./node_modules/sass-loader/lib/loader.js!./src/_style/style-sheets/property-definitions.scss ***!
+  \******************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loader/lib/css-base.js */ "./node_modules/css-loader/lib/css-base.js")(false);
+// imports
+
+
+// module
+exports.push([module.i, "/** Text Colors */\n#property-definitions-view-container {\n  margin: 50px; }\n  #property-definitions-view-container #property-definitions-title {\n    font-size: 20px;\n    margin-bottom: 25px; }\n  #property-definitions-view-container #property-definitions-header {\n    background-color: #f3f3f3;\n    padding: 20px; }\n    #property-definitions-view-container #property-definitions-header #property-header-name {\n      display: inline;\n      margin-left: 20px; }\n    #property-definitions-view-container #property-definitions-header #property-header-data-type {\n      display: inline;\n      float: right;\n      margin-right: 20px; }\n  #property-definitions-view-container #property-definitions-container {\n    min-height: 200px;\n    background-color: #f3f3f3;\n    margin-top: 25px;\n    font-size: 15px;\n    text-align: center;\n    line-height: 200px; }\n", ""]);
+
+// exports
+
+
+/***/ }),
+
 /***/ "./node_modules/css-loader/index.js!./node_modules/sass-loader/lib/loader.js!./src/_style/style-sheets/style-resets.scss":
 /*!**********************************************************************************************************************!*\
   !*** ./node_modules/css-loader!./node_modules/sass-loader/lib/loader.js!./src/_style/style-sheets/style-resets.scss ***!
@@ -534,6 +553,26 @@ if(false) {}
 
 /***/ }),
 
+/***/ "./src/_style/style-sheets/property-definitions.scss":
+/*!***********************************************************!*\
+  !*** ./src/_style/style-sheets/property-definitions.scss ***!
+  \***********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(/*! !../../../node_modules/css-loader!../../../node_modules/sass-loader/lib/loader.js!./property-definitions.scss */ "./node_modules/css-loader/index.js!./node_modules/sass-loader/lib/loader.js!./src/_style/style-sheets/property-definitions.scss");
+if(typeof content === 'string') content = [[module.i, content, '']];
+// add the styles to the DOM
+var update = __webpack_require__(/*! ../../../node_modules/style-loader/addStyles.js */ "./node_modules/style-loader/addStyles.js")(content, {});
+if(content.locals) module.exports = content.locals;
+// Hot Module Replacement
+if(false) {}
+
+/***/ }),
+
 /***/ "./src/_style/style-sheets/style-resets.scss":
 /*!***************************************************!*\
   !*** ./src/_style/style-sheets/style-resets.scss ***!
@@ -562,6 +601,52 @@ if(false) {}
 /***/ (function(module, exports) {
 
 module.exports = "\r\n\r\n\r\n<ul id=\"main-menu-container\">\r\n    <li class=\"main-menu-item\">Property Definitions</li>\r\n    <li class=\"main-menu-item\">Object Types</li>\r\n    <li class=\"main-menu-item\">Objects</li>\r\n</ul>";
+
+/***/ }),
+
+/***/ "./src/_view-templates/property-definitions.html":
+/*!*******************************************************!*\
+  !*** ./src/_view-templates/property-definitions.html ***!
+  \*******************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "\r\n\r\n\r\n<h1 id=\"property-definitions-title\">Property Definitions</h1>\r\n\r\n<div id=\"property-definitions-header\">\r\n    <p id=\"property-header-name\">Name</p>\r\n    <p id=\"property-header-data-type\">Data Type</p>\r\n\r\n</div>\r\n\r\n\r\n<ul id=\"property-definitions-container\">No property definitions</ul>";
+
+/***/ }),
+
+/***/ "./src/core/ConnectionProxy.ts":
+/*!*************************************!*\
+  !*** ./src/core/ConnectionProxy.ts ***!
+  \*************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+exports.__esModule = true;
+var CoreEntity_1 = __webpack_require__(/*! ./CoreEntity */ "./src/core/CoreEntity.ts");
+var ConnectionProxy = /** @class */ (function (_super) {
+    __extends(ConnectionProxy, _super);
+    function ConnectionProxy(proxyName) {
+        var _this = _super.call(this, proxyName) || this;
+        _this.address = "http://138.68.82.238:4200";
+        return _this;
+    }
+    return ConnectionProxy;
+}(CoreEntity_1.CoreEntity));
+exports.ConnectionProxy = ConnectionProxy;
+
 
 /***/ }),
 
@@ -764,6 +849,41 @@ exports.View = View;
 
 /***/ }),
 
+/***/ "./src/core/ViewComponent.ts":
+/*!***********************************!*\
+  !*** ./src/core/ViewComponent.ts ***!
+  \***********************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+exports.__esModule = true;
+var ConnectionProxy_1 = __webpack_require__(/*! ./ConnectionProxy */ "./src/core/ConnectionProxy.ts");
+var ViewComponent = /** @class */ (function () {
+    function ViewComponent(view, container) {
+        this.view = view;
+        this.container = container;
+        this.name = this.constructor.name;
+        this.connection = new ConnectionProxy_1.ConnectionProxy(this.name + "Proxy");
+        this.view.viewComponentExitCount[this.name] = null;
+    }
+    ViewComponent.prototype.sendSignal = function (name, data, sender) {
+        this.view.handleSignal({ name: name, data: data, sender: sender });
+    };
+    ViewComponent.prototype.enterScene = function () {
+    };
+    ViewComponent.prototype.exitScene = function (exitType) {
+        if (this.connection)
+            this.connection.unregister();
+    };
+    return ViewComponent;
+}());
+exports.ViewComponent = ViewComponent;
+
+
+/***/ }),
+
 /***/ "./src/core/ViewExitTypes.ts":
 /*!***********************************!*\
   !*** ./src/core/ViewExitTypes.ts ***!
@@ -806,6 +926,7 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 exports.__esModule = true;
+var PropertyDefinitionsView_1 = __webpack_require__(/*! ../property-definitions/PropertyDefinitionsView */ "./src/property-definitions/PropertyDefinitionsView.ts");
 var MainMenuView_1 = __webpack_require__(/*! ../main-menu/MainMenuView */ "./src/main-menu/MainMenuView.ts");
 var ViewExitTypes_1 = __webpack_require__(/*! ./ViewExitTypes */ "./src/core/ViewExitTypes.ts");
 var CoreEntity_1 = __webpack_require__(/*! ./CoreEntity */ "./src/core/CoreEntity.ts");
@@ -818,6 +939,7 @@ var ViewManager = /** @class */ (function (_super) {
     }
     ViewManager.prototype.initView = function () {
         this.mainMenuView = new MainMenuView_1.MainMenuView();
+        this.currentView = new PropertyDefinitionsView_1.PropertyDefinitionsView();
     };
     ViewManager.prototype.switchView = function (view, exitType, callback) {
         var _this = this;
@@ -905,6 +1027,120 @@ var MainMenuView = /** @class */ (function (_super) {
     return MainMenuView;
 }(View_1.View));
 exports.MainMenuView = MainMenuView;
+
+
+/***/ }),
+
+/***/ "./src/property-definitions/PropertyDefinitions.ts":
+/*!*********************************************************!*\
+  !*** ./src/property-definitions/PropertyDefinitions.ts ***!
+  \*********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+exports.__esModule = true;
+var ViewComponent_1 = __webpack_require__(/*! ../core/ViewComponent */ "./src/core/ViewComponent.ts");
+// CSS
+__webpack_require__(/*! ../_style/style-sheets/property-definitions.scss */ "./src/_style/style-sheets/property-definitions.scss");
+// HTML
+var template = __webpack_require__(/*! ../_view-templates/property-definitions.html */ "./src/_view-templates/property-definitions.html");
+var PropertyDefinitions = /** @class */ (function (_super) {
+    __extends(PropertyDefinitions, _super);
+    function PropertyDefinitions(view, container) {
+        var _this = _super.call(this, view, container) || this;
+        console.info("PropertyDefinitions view component initiated.");
+        _this.container.innerHTML = template;
+        _this.enterScene();
+        return _this;
+    }
+    PropertyDefinitions.prototype.registerEventListeners = function () {
+    };
+    PropertyDefinitions.prototype.unregisterEventListeners = function () {
+    };
+    PropertyDefinitions.prototype.enterScene = function () {
+        this.registerEventListeners();
+    };
+    PropertyDefinitions.prototype.exitScene = function (exitType) {
+        this.unregisterEventListeners();
+    };
+    return PropertyDefinitions;
+}(ViewComponent_1.ViewComponent));
+exports.PropertyDefinitions = PropertyDefinitions;
+
+
+/***/ }),
+
+/***/ "./src/property-definitions/PropertyDefinitionsView.ts":
+/*!*************************************************************!*\
+  !*** ./src/property-definitions/PropertyDefinitionsView.ts ***!
+  \*************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+exports.__esModule = true;
+var View_1 = __webpack_require__(/*! ../core/View */ "./src/core/View.ts");
+var SystemConstants_1 = __webpack_require__(/*! ../core/SystemConstants */ "./src/core/SystemConstants.ts");
+var PropertyDefinitions_1 = __webpack_require__(/*! ./PropertyDefinitions */ "./src/property-definitions/PropertyDefinitions.ts");
+var PropertyDefinitionsView = /** @class */ (function (_super) {
+    __extends(PropertyDefinitionsView, _super);
+    function PropertyDefinitionsView() {
+        var _this = _super.call(this, "PropertyDefinitionsView") || this;
+        _this.container = document.createElement("div");
+        _this.container.id = "property-definitions-view-container";
+        document.getElementById(SystemConstants_1.SystemConstants.MAIN_CONTAINER).appendChild(_this.container);
+        _this.propertyDefinitionsContainer = document.createElement("div");
+        _this.container.appendChild(_this.propertyDefinitionsContainer);
+        _this.propertyDefinitions = new PropertyDefinitions_1.PropertyDefinitions(_this, _this.propertyDefinitionsContainer);
+        return _this;
+    }
+    PropertyDefinitionsView.prototype.enterScene = function () {
+    };
+    PropertyDefinitionsView.prototype.exitScene = function (exitType) {
+    };
+    PropertyDefinitionsView.prototype.listNotificationInterests = function () {
+        var notifications = _super.prototype.listNotificationInterests.call(this);
+        return notifications;
+    };
+    PropertyDefinitionsView.prototype.handleNotification = function (notification) {
+        switch (notification.name) {
+            default:
+                break;
+        }
+    };
+    PropertyDefinitionsView.prototype.handleSignal = function (signal) {
+        console.log("Signal received in " + this.NAME + ": " + signal.name);
+        switch (signal.name) {
+            default:
+                break;
+        }
+    };
+    return PropertyDefinitionsView;
+}(View_1.View));
+exports.PropertyDefinitionsView = PropertyDefinitionsView;
 
 
 /***/ })
