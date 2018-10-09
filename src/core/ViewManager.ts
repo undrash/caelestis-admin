@@ -1,9 +1,10 @@
 
 
-import {INotification} from "./INotification";
-import {ViewExitTypes} from "./ViewExitTypes";
-import {CoreEntity} from "./CoreEntity";
-import {View} from "./View";
+import { MainMenuView } from "../main-menu/MainMenuView";
+import { INotification } from "./INotification";
+import { ViewExitTypes } from "./ViewExitTypes";
+import { CoreEntity } from "./CoreEntity";
+import { View } from "./View";
 
 
 
@@ -11,7 +12,7 @@ import {View} from "./View";
 
 export class ViewManager extends CoreEntity {
     public NAME: string;
-    private headerView: View;
+    private mainMenuView: View;
     private currentView: View;
 
 
@@ -22,7 +23,7 @@ export class ViewManager extends CoreEntity {
 
 
     private initView(): void {
-
+        this.mainMenuView = new MainMenuView();
     }
 
 

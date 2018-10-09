@@ -6,5 +6,5 @@ export class SystemConstants {
     public static readonly ENV_WEB = "ENV_WEB";
 
     public static readonly MAIN_CONTAINER = "content-container";
-    public static readonly HEADING_CONTAINER = "heading-container";
+    public static readonly MAIN_MENU_CONTAINER = "menu-container";
 }
