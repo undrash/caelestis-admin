@@ -30,7 +30,7 @@ export class PropertyDefinitions extends ViewComponent {
 
 
         this.propertyDefContainer = document.getElementById( "property-definitions-container" );
-        this.addBtn               = document.getElementById( "property-definitions-add-btn" );
+        this.addBtn               = document.getElementById( "property-definitions-add-btn" ) as HTMLButtonElement;
 
 
         this.enterScene();
