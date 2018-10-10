@@ -1,6 +1,6 @@
 
 
-import {CoreEntity} from "./CoreEntity";
+import {CoreEntity} from "../core/CoreEntity";
 
 export class ConnectionProxy extends CoreEntity {
     private address: string;

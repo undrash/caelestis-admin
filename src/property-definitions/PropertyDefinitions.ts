@@ -6,6 +6,8 @@ import { View } from "../core/View";
 // CSS
 import "../_style/style-sheets/property-definitions.scss";
 import {PropertyDefinitionDatatypes} from "./PropertyDefinitionDatatypes";
+import {IPropertyDefinition} from "../connection/models/IPropertyDefinition";
+import {PropertyDefinition} from "../connection/models/PropertyDefinition";
 
 // HTML
 const modalTemplate = require("../_view-templates/property-definitions-add-modal.html");
@@ -20,6 +22,11 @@ export class PropertyDefinitions extends ViewComponent {
     private propertyDefContainer: HTMLElement;
     private addBtn: HTMLButtonElement;
     private modalBackground: HTMLElement;
+    private modalCancelBtn: HTMLButtonElement;
+    private modalOKBtn: HTMLButtonElement;
+    private modalPropName: HTMLInputElement;
+    private modalPropDataType: HTMLSelectElement;
+    private modalPropObjectType: HTMLSelectElement;
 
 
     constructor(view: View, container: HTMLElement) {
@@ -34,12 +41,24 @@ export class PropertyDefinitions extends ViewComponent {
         this.propertyDefContainer = document.getElementById( "property-definitions-container" );
         this.addBtn               = document.getElementById( "property-definitions-add-btn" ) as HTMLButtonElement;
 
-        this.modalBackground      = document.createElement( "div" );
-        this.modalBackground.id = "property-definitions-modal-background";
-        this.modalBackground.innerHTML = modalTemplate;
+        this.modalBackground            = document.createElement( "div" );
+        this.modalBackground.id         = "property-definitions-modal-background";
+        this.modalBackground.innerHTML  = modalTemplate;
 
         this.container.appendChild( this.modalBackground );
 
+        this.modalPropName          = document.getElementById("pd-modal-input-name") as HTMLInputElement;
+        this.modalPropDataType      = document.getElementById("pd-modal-select-data-type") as HTMLSelectElement;
+        this.modalPropObjectType    = document.getElementById("pd-modal-select-object-type" ) as HTMLSelectElement;
+
+        this.modalCancelBtn         = document.getElementById( "pd-modal-add-cancel" ) as HTMLButtonElement;
+        this.modalOKBtn             = document.getElementById( "pd-modal-add-ok" ) as HTMLButtonElement;
+
+
+        this.modalBackgroundListener    = this.modalBackgroundListener.bind( this );
+        this.cancelBtnListener          = this.cancelBtnListener.bind( this );
+        this.addBtnListener             = this.addBtnListener.bind( this );
+        this.okBtnListener              = this.okBtnListener.bind( this );
 
         this.enterScene();
     }
@@ -48,6 +67,11 @@ export class PropertyDefinitions extends ViewComponent {
 
     private registerEventListeners(): void {
 
+        this.addBtn.addEventListener( "click", this.addBtnListener );
+        this.modalOKBtn.addEventListener( "click", this.okBtnListener );
+        this.modalCancelBtn.addEventListener( "click", this.cancelBtnListener );
+        this.modalBackground.addEventListener( "click", this.modalBackgroundListener );
+
 
     }
 
@@ -55,7 +79,40 @@ export class PropertyDefinitions extends ViewComponent {
 
     private unregisterEventListeners(): void {
 
+        this.addBtn.removeEventListener( "click", this.addBtnListener );
+        this.modalOKBtn.addEventListener( "click", this.okBtnListener );
+        this.modalCancelBtn.removeEventListener( "click", this.cancelBtnListener );
+        this.modalBackground.removeEventListener( "click", this.modalBackgroundListener );
 
+    }
+
+
+
+    private addBtnListener(e: any): void {
+        this.modalBackground.style.display = "block";
+    }
+
+
+
+    private cancelBtnListener(e: any): void {
+        this.hideNewPropDefModal();
+    }
+
+
+    private modalBackgroundListener(e: any): void {
+        if ( e.target.id === this.modalBackground.id ) this.hideNewPropDefModal();
+    }
+
+
+    private hideNewPropDefModal(): void {
+        this.modalPropName.value = "";
+        this.modalPropDataType.value = "1";
+        this.modalBackground.style.display = "none";
+    }
+
+
+    private okBtnListener(e:any): void {
+        console.log( this.createPropertyDefinition() );
     }
 
 
@@ -64,7 +121,6 @@ export class PropertyDefinitions extends ViewComponent {
         this.registerEventListeners();
 
         this.populate();
-
 
     }
 
@@ -114,6 +170,16 @@ export class PropertyDefinitions extends ViewComponent {
 
     }
 
+
+
+    private createPropertyDefinition(): IPropertyDefinition {
+
+        return new PropertyDefinition(
+            this.modalPropName.value,
+            parseInt( this.modalPropDataType.options[ this.modalPropDataType.selectedIndex ].value ),
+            []
+        )
+    }
 
 
     private parseDataType( datatype: number): string {

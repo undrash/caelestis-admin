@@ -1,6 +1,6 @@
 
 
-import {ConnectionProxy} from "./ConnectionProxy";
+import {ConnectionProxy} from "../connection/ConnectionProxy";
 import {IViewComponent} from "./IViewComponent";
 import {View} from "./View";
 
