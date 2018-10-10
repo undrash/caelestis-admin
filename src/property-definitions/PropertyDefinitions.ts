@@ -8,6 +8,7 @@ import "../_style/style-sheets/property-definitions.scss";
 import {PropertyDefinitionDatatypes} from "./PropertyDefinitionDatatypes";
 
 // HTML
+const modalTemplate = require("../_view-templates/property-definitions-add-modal.html");
 const template = require("../_view-templates/property-definitions.html" );
 
 
@@ -18,6 +19,7 @@ export class PropertyDefinitions extends ViewComponent {
 
     private propertyDefContainer: HTMLElement;
     private addBtn: HTMLButtonElement;
+    private modalBackground: HTMLElement;
 
 
     constructor(view: View, container: HTMLElement) {
@@ -31,6 +33,12 @@ export class PropertyDefinitions extends ViewComponent {
 
         this.propertyDefContainer = document.getElementById( "property-definitions-container" );
         this.addBtn               = document.getElementById( "property-definitions-add-btn" ) as HTMLButtonElement;
+
+        this.modalBackground      = document.createElement( "div" );
+        this.modalBackground.id = "property-definitions-modal-background";
+        this.modalBackground.innerHTML = modalTemplate;
+
+        this.container.appendChild( this.modalBackground );
 
 
         this.enterScene();
