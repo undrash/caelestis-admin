@@ -1,6 +1,7 @@
 
 
 import {CoreEntity} from "../core/CoreEntity";
+import {IPropertyDefinition} from "./models/IPropertyDefinition";
 
 export class ConnectionProxy extends CoreEntity {
     private address: string;
@@ -20,6 +21,37 @@ export class ConnectionProxy extends CoreEntity {
         this.httpRequest(
             "GET",
             "/api/v1/property-definitions/",
+            null,
+            success,
+            failure
+        );
+
+    }
+
+
+
+    public createPropertyDefinition(data: IPropertyDefinition, success: Function, failure: Function): void {
+        console.info( "Proxy create property definition executed." );
+
+        this.httpRequest(
+            "POST",
+            "/api/v1/property-definitions/",
+            data,
+            success,
+            failure
+        );
+
+
+    }
+
+
+
+    public getObjectTypes(success: Function, failure: Function): void {
+        console.info( "Proxy get object type executed." );
+
+        this.httpRequest(
+            "GET",
+            "/api/v1/object-types/",
             null,
             success,
             failure

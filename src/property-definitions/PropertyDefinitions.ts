@@ -27,6 +27,7 @@ export class PropertyDefinitions extends ViewComponent {
     private modalPropName: HTMLInputElement;
     private modalPropDataType: HTMLSelectElement;
     private modalPropObjectType: HTMLSelectElement;
+    private modalObjectTypeContainer: HTMLElement;
 
 
     constructor(view: View, container: HTMLElement) {
@@ -47,19 +48,21 @@ export class PropertyDefinitions extends ViewComponent {
 
         this.container.appendChild( this.modalBackground );
 
-        this.modalPropName          = document.getElementById("pd-modal-input-name") as HTMLInputElement;
-        this.modalPropDataType      = document.getElementById("pd-modal-select-data-type") as HTMLSelectElement;
-        this.modalPropObjectType    = document.getElementById("pd-modal-select-object-type" ) as HTMLSelectElement;
+        this.modalPropName              = document.getElementById("pd-modal-input-name") as HTMLInputElement;
+        this.modalPropDataType          = document.getElementById("pd-modal-select-data-type") as HTMLSelectElement;
+        this.modalPropObjectType        = document.getElementById("pd-modal-select-object-type" ) as HTMLSelectElement;
 
-        this.modalCancelBtn         = document.getElementById( "pd-modal-add-cancel" ) as HTMLButtonElement;
-        this.modalOKBtn             = document.getElementById( "pd-modal-add-ok" ) as HTMLButtonElement;
+        this.modalObjectTypeContainer   = document.getElementById("pd-modal-object-type-container" );
+
+        this.modalCancelBtn             = document.getElementById( "pd-modal-add-cancel" ) as HTMLButtonElement;
+        this.modalOKBtn                 = document.getElementById( "pd-modal-add-ok" ) as HTMLButtonElement;
 
 
         this.modalBackgroundListener    = this.modalBackgroundListener.bind( this );
         this.cancelBtnListener          = this.cancelBtnListener.bind( this );
         this.addBtnListener             = this.addBtnListener.bind( this );
         this.okBtnListener              = this.okBtnListener.bind( this );
-
+        this.dataTypeChangeListener     = this.dataTypeChangeListener.bind( this );
         this.enterScene();
     }
 
@@ -71,6 +74,7 @@ export class PropertyDefinitions extends ViewComponent {
         this.modalOKBtn.addEventListener( "click", this.okBtnListener );
         this.modalCancelBtn.addEventListener( "click", this.cancelBtnListener );
         this.modalBackground.addEventListener( "click", this.modalBackgroundListener );
+        this.modalPropDataType.addEventListener( "change", this.dataTypeChangeListener );
 
 
     }
@@ -83,6 +87,7 @@ export class PropertyDefinitions extends ViewComponent {
         this.modalOKBtn.addEventListener( "click", this.okBtnListener );
         this.modalCancelBtn.removeEventListener( "click", this.cancelBtnListener );
         this.modalBackground.removeEventListener( "click", this.modalBackgroundListener );
+        this.modalPropDataType.removeEventListener( "change", this.dataTypeChangeListener );
 
     }
 
@@ -99,9 +104,11 @@ export class PropertyDefinitions extends ViewComponent {
     }
 
 
+
     private modalBackgroundListener(e: any): void {
         if ( e.target.id === this.modalBackground.id ) this.hideNewPropDefModal();
     }
+
 
 
     private hideNewPropDefModal(): void {
@@ -111,8 +118,81 @@ export class PropertyDefinitions extends ViewComponent {
     }
 
 
+
     private okBtnListener(e:any): void {
-        console.log( this.createPropertyDefinition() );
+        const propDef = this.createPropertyDefinition();
+
+        this.hideNewPropDefModal();
+
+        const self = this;
+
+        this.connection.createPropertyDefinition(
+            propDef,
+            (response: any) => {
+
+                const { propertyDef } = response;
+
+                let propDefItem = document.createElement( "div" );
+                propDefItem.id = propertyDef._id;
+                propDefItem.className = "property-definition-item";
+
+
+                let propDefTitle = document.createElement( "p" );
+                propDefTitle.className = "property-definition-item-title";
+                propDefTitle.innerHTML = propertyDef.name;
+
+                let propDefType = document.createElement( "p" );
+                propDefType.className = "property-definition-item-type";
+                propDefType.innerHTML = self.parseDataType( propertyDef.dataType );
+
+
+                propDefItem.appendChild( propDefTitle );
+                propDefItem.appendChild( propDefType );
+
+                self.propertyDefContainer.appendChild( propDefItem );
+
+            },
+            (message: string) => {
+                console.warn( message );
+            }
+        )
+    }
+
+
+
+    private dataTypeChangeListener(e:any): void {
+
+        console.log( this.modalPropDataType.options[ this.modalPropDataType.selectedIndex ].value );
+
+        const selectValue = parseInt( this.modalPropDataType.options[ this.modalPropDataType.selectedIndex ].value );
+
+        if ( selectValue === PropertyDefinitionDatatypes.LOOKUP ) {
+            this.modalObjectTypeContainer.style.display = "block";
+
+            const self = this;
+
+            this.connection.getObjectTypes( (response: any) => {
+
+                const objectTypes = response.objectTypes;
+
+                for ( let i = 0; i < objectTypes.length; i++ ) {
+
+                    let option = document.createElement( "option" );
+                    option.text = objectTypes[i].name;
+                    option.value = objectTypes[i]._id;
+
+                    self.modalPropObjectType.add( option );
+                }
+
+
+            }, (message: string) => {
+                console.warn( message );
+            })
+
+        } else {
+            this.modalObjectTypeContainer.style.display = "none";
+        }
+
     }
 
 
@@ -174,11 +254,27 @@ export class PropertyDefinitions extends ViewComponent {
 
     private createPropertyDefinition(): IPropertyDefinition {
 
-        return new PropertyDefinition(
-            this.modalPropName.value,
-            parseInt( this.modalPropDataType.options[ this.modalPropDataType.selectedIndex ].value ),
-            []
-        )
+        const name = this.modalPropName.value;
+        const dataType = parseInt( this.modalPropDataType.options[ this.modalPropDataType.selectedIndex ].value );
+
+        if ( dataType === PropertyDefinitionDatatypes.LOOKUP ) {
+
+            return new PropertyDefinition(
+                name,
+                dataType,
+                this.modalPropObjectType.options[ this.modalPropObjectType.selectedIndex ].value,
+                []
+            )
+        } else {
+            return new PropertyDefinition(
+                name,
+                dataType,
+                null,
+                []
+            )
+        }
+
+
     }
 
 
