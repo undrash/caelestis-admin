@@ -1,14 +1,40 @@
 
 
 
-import {ViewComponent} from "../core/ViewComponent";
-import {View} from "../core/View";
+import { ViewComponent } from "../core/ViewComponent";
+import { View } from "../core/View";
+
+// CSS
+import "../_style/style-sheets/object-types.scss";
+
+// HTML
+const modalTemplate = require("../_view-templates/object-types-add-modal.html");
+const template = require("../_view-templates/object-types.html" );
 
 export class ObjectTypes extends ViewComponent {
+
+    private objectTypesContainer: HTMLElement;
+    private addBtn: HTMLButtonElement;
+    private modalBackground: HTMLElement;
+
 
 
     constructor(view: View, container: HTMLElement) {
         super( view, container );
+
+        this.container.innerHTML = template;
+
+        this.objectTypesContainer        = document.getElementById( "object-types-container" );
+        this.addBtn                     = document.getElementById( "object-types-add-btn" ) as HTMLButtonElement;
+
+        this.modalBackground            = document.createElement( "div" );
+        this.modalBackground.id         = "object-types-modal-background";
+        this.modalBackground.innerHTML  = modalTemplate;
+
+        this.container.appendChild( this.modalBackground );
+
+        this.modalBackgroundListener    = this.modalBackgroundListener.bind( this );
+        this.addBtnListener             = this.addBtnListener.bind( this );
 
         this.enterScene();
     }
@@ -17,6 +43,8 @@ export class ObjectTypes extends ViewComponent {
 
     private registerEventListeners(): void {
 
+        this.addBtn.addEventListener( "click", this.addBtnListener );
+        this.modalBackground.addEventListener( "click", this.modalBackgroundListener );
 
     }
 
@@ -24,14 +52,35 @@ export class ObjectTypes extends ViewComponent {
 
     private unregisterEventListeners(): void {
 
+        this.addBtn.removeEventListener( "click", this.addBtnListener );
+        this.modalBackground.removeEventListener( "click", this.modalBackgroundListener );
 
+    }
+
+
+
+    private addBtnListener(e: any): void {
+        this.modalBackground.style.display = "block";
+    }
+
+
+
+    private modalBackgroundListener(e: any): void {
+        if ( e.target.id === this.modalBackground.id ) this.hideNewPropDefModal();
+    }
+
+
+
+    private hideNewPropDefModal(): void {
+
+        this.modalBackground.style.display = "none";
     }
 
 
 
     public enterScene(): void {
         this.registerEventListeners();
-
+        this.populate();
     }
 
 
@@ -41,6 +90,48 @@ export class ObjectTypes extends ViewComponent {
         this.unregisterEventListeners();
 
         this.view.componentExited( this.name );
+    }
+
+
+    private populate(): void {
+
+        this.connection.getObjectTypes(
+            (response: any) => {
+
+                const { objectTypes } = response;
+
+                if ( objectTypes.length ) this.objectTypesContainer.innerHTML = "";
+
+                for ( let i = 0; i < objectTypes.length; i++ ) {
+
+                    let otItem = document.createElement( "div" );
+                    otItem.id = objectTypes[i]._id;
+                    otItem.className = "object-type-item";
+
+
+                    let propDefTitle = document.createElement( "p" );
+                    propDefTitle.className = "object-type-item-title";
+                    propDefTitle.innerHTML = objectTypes[i].name;
+
+                    let propDefType = document.createElement( "p" );
+                    propDefType.className = "object-type-item-properties";
+                    propDefType.innerHTML = objectTypes[i].properties.length;
+
+
+                    otItem.appendChild( propDefTitle );
+                    otItem.appendChild( propDefType );
+
+                    this.objectTypesContainer.appendChild( otItem );
+
+                }
+
+            },
+            (message: string) => {
+                console.warn( message );
+            }
+        )
+
+
     }
 
 

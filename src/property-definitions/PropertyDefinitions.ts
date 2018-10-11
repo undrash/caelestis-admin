@@ -1,13 +1,13 @@
 
-
+import { PropertyDefinitionDatatypes } from "./PropertyDefinitionDatatypes";
+import { IPropertyDefinition } from "../connection/models/IPropertyDefinition";
+import { PropertyDefinition } from "../connection/models/PropertyDefinition";
 import { ViewComponent } from "../core/ViewComponent";
 import { View } from "../core/View";
 
 // CSS
 import "../_style/style-sheets/property-definitions.scss";
-import {PropertyDefinitionDatatypes} from "./PropertyDefinitionDatatypes";
-import {IPropertyDefinition} from "../connection/models/IPropertyDefinition";
-import {PropertyDefinition} from "../connection/models/PropertyDefinition";
+
 
 // HTML
 const modalTemplate = require("../_view-templates/property-definitions-add-modal.html");
