@@ -6,6 +6,9 @@ import { INotification } from "./INotification";
 import { ViewExitTypes } from "./ViewExitTypes";
 import { CoreEntity } from "./CoreEntity";
 import { View } from "./View";
+import {MainMenuNotifications} from "../main-menu/MainMenuNotifications";
+import {ObjectTypesView} from "../object-types/ObjectTypesView";
+import {ObjectsView} from "../objects/ObjectsView";
 
 
 
@@ -48,8 +51,9 @@ export class ViewManager extends CoreEntity {
 
         let notifications = [];
 
-        notifications.push( "" );
-
+        notifications.push( MainMenuNotifications.MENU_ITEM_PROPERTY_DEFINITIONS );
+        notifications.push( MainMenuNotifications.MENU_ITEM_OBJECT_TYPES );
+        notifications.push( MainMenuNotifications.MENU_ITEM_OBJECTS );
 
 
         return notifications;
@@ -59,9 +63,27 @@ export class ViewManager extends CoreEntity {
 
     public handleNotification(notification: INotification) {
 
+        console.info( "View manager notification arrived: " + notification.name );
+
         switch ( notification.name ) {
 
+            case MainMenuNotifications.MENU_ITEM_PROPERTY_DEFINITIONS :
 
+                this.switchView( PropertyDefinitionsView, null );
+
+                break;
+
+            case MainMenuNotifications.MENU_ITEM_OBJECT_TYPES :
+
+                this.switchView( ObjectTypesView, null );
+
+                break;
+
+            case MainMenuNotifications.MENU_ITEM_OBJECTS :
+
+                this.switchView( ObjectsView, null );
+
+                break;
 
             default :
                 break;

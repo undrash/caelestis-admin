@@ -2,6 +2,10 @@
 
 import {View} from "../core/View";
 import {INotification} from "../core/INotification";
+import {ISignal} from "../core/ISignal";
+import {ViewComponent} from "../core/ViewComponent";
+import {SystemConstants} from "../core/SystemConstants";
+import {ObjectTypes} from "./ObjectTypes";
 
 
 
@@ -9,27 +13,24 @@ import {INotification} from "../core/INotification";
 
 
 export class ObjectTypesView extends View {
-
+    private objectTypes: ViewComponent;
+    private objectTypesContainer: HTMLElement;
 
 
     constructor() {
         super( "ObjectTypesView" );
 
+        this.container = document.createElement( "div" );
+        this.container.id = "object-types-view-container";
+
+        document.getElementById( SystemConstants.MAIN_CONTAINER ).appendChild( this.container );
+
+        this.objectTypesContainer = document.createElement( "div" );
+        this.container.appendChild( this.objectTypesContainer );
+
+        this.objectTypes = new ObjectTypes( this, this.objectTypesContainer );
     }
 
-
-
-    private registerEventListeners(): void {
-
-
-    }
-
-
-
-    private unregisterEventListeners(): void {
-
-
-    }
 
 
 
@@ -42,15 +43,16 @@ export class ObjectTypesView extends View {
 
 
     public enterScene(): void {
-        this.registerEventListeners();
 
 
     }
 
 
 
-    public exitScene(exitType: string): void {
-        this.unregisterEventListeners();
+    public exitScene(exitType: string, callback: Function): void {
+        this.exitCallback = callback;
+
+        this.objectTypes.exitScene( exitType );
 
     }
 
@@ -63,6 +65,19 @@ export class ObjectTypesView extends View {
 
 
             default :
+                break;
+        }
+
+    }
+
+
+
+    public handleSignal(signal: ISignal) {
+        console.log( "Signal received in " + this.NAME + ": " + signal.name );
+
+        switch ( signal.name ) {
+
+            default:
                 break;
         }
 

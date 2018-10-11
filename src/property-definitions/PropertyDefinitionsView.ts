@@ -41,7 +41,11 @@ export class PropertyDefinitionsView extends View {
 
 
 
-    public exitScene(exitType: string): void {
+    public exitScene(exitType: string, callback: Function): void {
+
+        this.exitCallback = callback;
+
+        this.propertyDefinitions.exitScene( exitType );
 
 
     }

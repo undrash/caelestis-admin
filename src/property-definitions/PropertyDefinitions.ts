@@ -33,8 +33,6 @@ export class PropertyDefinitions extends ViewComponent {
     constructor(view: View, container: HTMLElement) {
         super( view, container );
 
-        console.info( "PropertyDefinitions view component initiated." );
-
 
         this.container.innerHTML = template;
 
@@ -63,6 +61,8 @@ export class PropertyDefinitions extends ViewComponent {
         this.addBtnListener             = this.addBtnListener.bind( this );
         this.okBtnListener              = this.okBtnListener.bind( this );
         this.dataTypeChangeListener     = this.dataTypeChangeListener.bind( this );
+
+
         this.enterScene();
     }
 
@@ -207,8 +207,12 @@ export class PropertyDefinitions extends ViewComponent {
 
 
     public exitScene(exitType: string): void {
+        super.exitScene( exitType );
         this.unregisterEventListeners();
 
+        console.info( "exit being called in property definitions" );
+
+        this.view.componentExited( this.name );
     }
 
 
