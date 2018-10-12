@@ -99,7 +99,6 @@
     display: none;
 
     #object-types-modal-container {
-      display: none;
       background-color: white;
       padding: 40px;
       width: 400px;
@@ -184,17 +183,10 @@
         }
       }
 
-      #ot-modal-add-property-btn {
+      #ot-modal-edit-property-btn {
         height: 40px;
         margin-top: 10px;
-        width: 153px;
-      }
-
-      #ot-modal-remove-property-btn {
-        height: 40px;
-        margin-top: 10px;
-        margin-left: 10px;
-        width: 152px;
+        width: 100%;
       }
 
       #ot-modal-ok-btn {
@@ -209,6 +201,7 @@
     }
 
     #ot-add-properties-modal-container {
+      display: none;
       background-color: white;
       padding: 40px;
       width: 400px;
@@ -277,11 +270,13 @@
 
       }
 
+
       #ot-add-properties-modal-new-property-btn {
         height: 40px;
         margin-top: 5px;
         width: 100%
       }
+
 
       #ot-add-properties-modal-buttons-container {
         margin: 25px auto auto;
