@@ -6,18 +6,15 @@
 
   margin: 50px;
 
-
   #object-types-title {
     font-size: 20px;
     margin-bottom: 25px;
   }
 
-
   #object-types-header {
     background-color: $primary-color;
     padding: 20px;
   }
-
 
   #object-types-header-name {
     display: inline;
@@ -30,7 +27,6 @@
     margin-right: 20px;
   }
 
-
   #object-types-container {
     min-height: 30px;
     max-height: calc(100vh - 350px);
@@ -42,7 +38,6 @@
     text-align: center;
     line-height: 200px;
   }
-
 
   .object-type-item {
     height: 30px;
@@ -61,7 +56,6 @@
       line-height: 30px;
       display: inline;
     }
-
 
     .object-type-item-properties {
       float: right;
@@ -94,7 +88,6 @@
     }
   }
 
-
   #object-types-modal-background {
     background-color: rgba(255, 255, 255, 0.5);;
     position: absolute;
@@ -105,16 +98,15 @@
     left: 0;
     display: none;
 
-
     #object-types-modal-container {
+      display: none;
       background-color: white;
       padding: 40px;
       width: 400px;
       margin: 14% auto auto;
-      -webkit-box-shadow: -2px 11px 29px -12px rgba(0,0,0,0.61);
-      -moz-box-shadow: -2px 11px 29px -12px rgba(0,0,0,0.61);
-      box-shadow: -2px 11px 29px -12px rgba(0,0,0,0.61);
-
+      -webkit-box-shadow: -2px 11px 29px -12px rgba(0, 0, 0, 0.61);
+      -moz-box-shadow: -2px 11px 29px -12px rgba(0, 0, 0, 0.61);
+      box-shadow: -2px 11px 29px -12px rgba(0, 0, 0, 0.61);
 
       .ot-modal-add-input {
         margin: 15px 0;
@@ -128,14 +120,13 @@
         height: 50px;
         text-align: center;
         line-height: 50px;
-        border:none;
+        border: none;
 
         &:hover {
           background-color: grey;
           color: white;
         }
       }
-
 
       #ot-modal-properties-header {
         height: 35px;
@@ -157,10 +148,7 @@
           margin-right: 10px;
         }
 
-
-
       }
-
 
       #ot-modal-properties-container {
         height: 164px;
@@ -179,12 +167,10 @@
             text-overflow: ellipsis;
           }
 
-
           .ot-modal-property-data-type {
             line-height: 30px;
             margin-left: 108px;
           }
-
 
           .ot-modal-property-required-checkbox {
             -webkit-appearance: checkbox;
@@ -198,18 +184,22 @@
         }
       }
 
-
       #ot-modal-add-property-btn {
         height: 40px;
         margin-top: 10px;
-        width: 100%;
+        width: 153px;
       }
 
+      #ot-modal-remove-property-btn {
+        height: 40px;
+        margin-top: 10px;
+        margin-left: 10px;
+        width: 152px;
+      }
 
-      #ot-modal-add-ok {
+      #ot-modal-ok-btn {
         margin-right: 10px;
       }
-
 
       #ot-modal-buttons-container {
         margin: 25px auto auto;
@@ -218,7 +208,106 @@
 
     }
 
+    #ot-add-properties-modal-container {
+      background-color: white;
+      padding: 40px;
+      width: 400px;
+      margin: 14% auto auto;
+      -webkit-box-shadow: -2px 11px 29px -12px rgba(0, 0, 0, 0.61);
+      -moz-box-shadow: -2px 11px 29px -12px rgba(0, 0, 0, 0.61);
+      box-shadow: -2px 11px 29px -12px rgba(0, 0, 0, 0.61);
+
+      p {
+        margin-top: 15px;
+      }
+
+      #ot-add-properties-header {
+        height: 35px;
+        border: 1px solid;
+        margin-top: 15px;
+
+        #ot-add-properties-property-name {
+          line-height: 33px;
+          margin-left: 10px;
+        }
+
+        #ot-add-properties-property-data-type {
+          line-height: 33px;
+          float: right;
+          margin-right: 10px;
+        }
+      }
+
+
+      #ot-add-properties-modal-property-container {
+        height: 370px;
+        border: 1px solid;
+        margin-top: 5px;
+        overflow-x: hidden;
+        overflow-y: auto;
+
+
+        .ot-add-properties-property {
+          height: 30px;
+
+          .ot-add-properties-modal-property-required-checkbox {
+            -webkit-appearance: checkbox;
+            float: left;
+            width: 18px;
+            height: 18px;
+            margin-top: 5px;
+            margin-left: 10px;
+          }
+
+
+          .ot-add-properties-modal-property-name {
+            line-height: 30px;
+            margin-left: 10px;
+            max-width: 100px;
+            text-overflow: ellipsis;
+          }
+
+
+          .ot-add-properties-modal-property-data-type {
+            line-height: 30px;
+            float: right;
+            margin-right: 10px;
+          }
+        }
+
+      }
+
+      #ot-add-properties-modal-new-property-btn {
+        height: 40px;
+        margin-top: 5px;
+        width: 100%
+      }
+
+      #ot-add-properties-modal-buttons-container {
+        margin: 25px auto auto;
+        width: 215px;
+
+
+        .ot-modal-add-button {
+          width: 100px;
+          height: 50px;
+          text-align: center;
+          line-height: 50px;
+          border: none;
+
+          &:hover {
+            background-color: grey;
+            color: white;
+          }
+        }
+
+        #ot-add-properties-ok-btn {
+          margin-right: 10px;
+        }
+
+      }
+
+    }
 
   }
-
 }

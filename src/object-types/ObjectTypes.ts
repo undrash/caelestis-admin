@@ -8,7 +8,9 @@ import { View } from "../core/View";
 import "../_style/style-sheets/object-types.scss";
 
 // HTML
-const modalTemplate = require("../_view-templates/object-types-add-modal.html");
+const newOTModalTemplate = require("../_view-templates/object-types-new-object-type-modal.html");
+const addPDModalTemplate = require("../_view-templates/object-types-add-properties-modal.html");
+const newPDModalTemplate = require("../_view-templates/property-definitions-add-modal.html");
 const template = require("../_view-templates/object-types.html" );
 
 export class ObjectTypes extends ViewComponent {
@@ -16,6 +18,11 @@ export class ObjectTypes extends ViewComponent {
     private objectTypesContainer: HTMLElement;
     private addBtn: HTMLButtonElement;
     private modalBackground: HTMLElement;
+    private modalOTNameInput: HTMLInputElement;
+    private modalOTPropertiesContainer: HTMLElement;
+    private modalOTAddPropertiesBtn: HTMLButtonElement;
+    private modalOTCancelBtn: HTMLButtonElement;
+    private modalOTOKBtn: HTMLButtonElement;
 
 
 
@@ -24,17 +31,31 @@ export class ObjectTypes extends ViewComponent {
 
         this.container.innerHTML = template;
 
-        this.objectTypesContainer        = document.getElementById( "object-types-container" );
+        this.objectTypesContainer       = document.getElementById( "object-types-container" );
         this.addBtn                     = document.getElementById( "object-types-add-btn" ) as HTMLButtonElement;
 
         this.modalBackground            = document.createElement( "div" );
         this.modalBackground.id         = "object-types-modal-background";
-        this.modalBackground.innerHTML  = modalTemplate;
+        this.modalBackground.innerHTML  = newOTModalTemplate;
+
+        this.modalBackground.insertAdjacentHTML( "beforeend", addPDModalTemplate );
+        this.modalBackground.insertAdjacentHTML( "beforeend", newPDModalTemplate );
+
 
         this.container.appendChild( this.modalBackground );
 
+
+        this.modalOTNameInput           = document.getElementById( "ot-modal-input-name" ) as HTMLInputElement;
+        this.modalOTPropertiesContainer = document.getElementById( "ot-modal-properties-container" );
+        this.modalOTAddPropertiesBtn    = document.getElementById( "ot-modal-add-property-btn" ) as HTMLButtonElement;
+        this.modalOTCancelBtn           = document.getElementById( "ot-modal-ok-btn" ) as HTMLButtonElement;
+        this.modalOTOKBtn               = document.getElementById( "ot-modal-cancel-btn" ) as HTMLButtonElement;
+
+
         this.modalBackgroundListener    = this.modalBackgroundListener.bind( this );
         this.addBtnListener             = this.addBtnListener.bind( this );
+        this.cancelBtnListener          = this.cancelBtnListener.bind( this );
+
 
         this.enterScene();
     }
@@ -45,6 +66,8 @@ export class ObjectTypes extends ViewComponent {
 
         this.addBtn.addEventListener( "click", this.addBtnListener );
         this.modalBackground.addEventListener( "click", this.modalBackgroundListener );
+        this.modalOTCancelBtn.addEventListener( "click", this.cancelBtnListener );
+
 
     }
 
@@ -54,6 +77,7 @@ export class ObjectTypes extends ViewComponent {
 
         this.addBtn.removeEventListener( "click", this.addBtnListener );
         this.modalBackground.removeEventListener( "click", this.modalBackgroundListener );
+        this.modalOTCancelBtn.removeEventListener( "click", this.cancelBtnListener );
 
     }
 
@@ -70,9 +94,12 @@ export class ObjectTypes extends ViewComponent {
     }
 
 
+    private cancelBtnListener(e: any): void {
+        this.hideNewPropDefModal();
+    }
+
 
     private hideNewPropDefModal(): void {
-
         this.modalBackground.style.display = "none";
     }
 
@@ -91,6 +118,7 @@ export class ObjectTypes extends ViewComponent {
 
         this.view.componentExited( this.name );
     }
+
 
 
     private populate(): void {
@@ -133,6 +161,7 @@ export class ObjectTypes extends ViewComponent {
 
 
     }
+
 
 
 
