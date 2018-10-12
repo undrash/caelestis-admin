@@ -22,6 +22,7 @@ export class PropertyDefinitions extends ViewComponent {
     private propertyDefContainer: HTMLElement;
     private addBtn: HTMLButtonElement;
     private modalBackground: HTMLElement;
+    private modalContainer: HTMLElement;
     private modalCancelBtn: HTMLButtonElement;
     private modalOKBtn: HTMLButtonElement;
     private modalPropName: HTMLInputElement;
@@ -46,6 +47,7 @@ export class PropertyDefinitions extends ViewComponent {
 
         this.container.appendChild( this.modalBackground );
 
+        this.modalContainer             = document.getElementById("property-definitions-modal-container") as HTMLElement;
         this.modalPropName              = document.getElementById("pd-modal-input-name") as HTMLInputElement;
         this.modalPropDataType          = document.getElementById("pd-modal-select-data-type") as HTMLSelectElement;
         this.modalPropObjectType        = document.getElementById("pd-modal-select-object-type" ) as HTMLSelectElement;
@@ -95,6 +97,7 @@ export class PropertyDefinitions extends ViewComponent {
 
     private addBtnListener(e: any): void {
         this.modalBackground.style.display = "block";
+        this.modalContainer.style.display = "block";
     }
 
 
@@ -115,6 +118,7 @@ export class PropertyDefinitions extends ViewComponent {
         this.modalPropName.value = "";
         this.modalPropDataType.value = "1";
         this.modalBackground.style.display = "none";
+        this.modalObjectTypeContainer.style.display = "none";
     }
 
 

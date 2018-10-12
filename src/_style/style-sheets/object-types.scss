@@ -201,7 +201,7 @@
 
     }
 
-    #ot-add-properties-modal-container {
+    #ot-select-properties-modal-container {
       display: none;
       background-color: white;
       padding: 40px;
@@ -215,17 +215,17 @@
         margin-top: 15px;
       }
 
-      #ot-add-properties-header {
+      #ot-select-properties-header {
         height: 35px;
         border: 1px solid;
         margin-top: 15px;
 
-        #ot-add-properties-property-name {
+        #ot-select-properties-property-name {
           line-height: 33px;
           margin-left: 10px;
         }
 
-        #ot-add-properties-property-data-type {
+        #ot-select-properties-property-data-type {
           line-height: 33px;
           float: right;
           margin-right: 10px;
@@ -233,7 +233,7 @@
       }
 
 
-      #ot-add-properties-modal-property-container {
+      #ot-select-properties-modal-property-container {
         height: 370px;
         border: 1px solid;
         margin-top: 5px;
@@ -241,10 +241,10 @@
         overflow-y: auto;
 
 
-        .ot-add-properties-property {
+        .ot-select-properties-property {
           height: 30px;
 
-          .ot-add-properties-modal-property-required-checkbox {
+          .ot-select-properties-modal-property-required-checkbox {
             -webkit-appearance: checkbox;
             float: left;
             width: 18px;
@@ -254,7 +254,7 @@
           }
 
 
-          .ot-add-properties-modal-property-name {
+          .ot-select-properties-modal-property-name {
             line-height: 30px;
             margin-left: 10px;
             max-width: 100px;
@@ -262,7 +262,7 @@
           }
 
 
-          .ot-add-properties-modal-property-data-type {
+          .ot-select-properties-modal-property-data-type {
             line-height: 30px;
             float: right;
             margin-right: 10px;
@@ -272,14 +272,14 @@
       }
 
 
-      #ot-add-properties-modal-new-property-btn {
+      #ot-select-properties-modal-new-property-btn {
         height: 40px;
         margin-top: 5px;
         width: 100%
       }
 
 
-      #ot-add-properties-modal-buttons-container {
+      #ot-select-properties-modal-buttons-container {
         margin: 25px auto auto;
         width: 215px;
 
@@ -297,7 +297,7 @@
           }
         }
 
-        #ot-add-properties-ok-btn {
+        #ot-select-properties-ok-btn {
           margin-right: 10px;
         }
 
