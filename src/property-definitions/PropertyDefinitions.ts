@@ -187,7 +187,7 @@ export class PropertyDefinitions extends ViewComponent {
 
             }, (message: string) => {
                 console.warn( message );
-            })
+            });
 
         } else {
             this.modalObjectTypeContainer.style.display = "none";
