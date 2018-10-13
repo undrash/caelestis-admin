@@ -100,6 +100,21 @@ export class ConnectionProxy extends CoreEntity {
 
 
 
+    public getObjects(success: Function, failure: Function): void {
+
+        this.httpRequest(
+            "GET",
+            "/api/v1/objects/",
+            null,
+            success,
+            failure
+        );
+
+
+
+    }
+
+
     private httpRequest(method: string, endpoint: string, data: any, success: Function, failure: Function): XMLHttpRequest {
 
         let xhr = new XMLHttpRequest();

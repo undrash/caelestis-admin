@@ -16,6 +16,7 @@ import "../_style/style-sheets/objects-listing.scss";
 
 export class ObjectsListing extends ViewComponent {
 
+    private objectsContainer: HTMLElement;
 
 
     constructor(view: View, container: HTMLElement) {
@@ -24,6 +25,7 @@ export class ObjectsListing extends ViewComponent {
 
         this.container.innerHTML = template;
 
+        this.objectsContainer = document.getElementById( "object-listing-objects-container" );
 
         this.enterScene();
     }
@@ -46,7 +48,7 @@ export class ObjectsListing extends ViewComponent {
 
     public enterScene(): void {
         this.registerEventListeners();
-
+        this.populate();
     }
 
 
@@ -57,6 +59,64 @@ export class ObjectsListing extends ViewComponent {
 
         this.view.componentExited( this.name );
     }
+
+
+    private populate(): void {
+
+        this.connection.getObjects(
+            (response: any) => {
+                const { objects } = response;
+
+                console.log( objects );
+
+                if ( objects.length ) this.objectsContainer.innerHTML = "";
+
+                for ( let i = 0; i < objects.length; i++ ) {
+
+                    let objItem = document.createElement( "div" );
+                    objItem.id = objects[i]._id;
+                    objItem.className = "object-item";
+
+
+                    let objName = document.createElement( "span" );
+                    objName.className = "object-item-name";
+                    objName.innerHTML = objects[i].name;
+
+                    let objType = document.createElement( "span" );
+                    objType.className = "object-item-type";
+
+                    let objProperties = document.createElement( "span" );
+                    objProperties.className = "object-item-properties";
+                    objProperties.innerHTML = objects[i].properties.length;
+
+                    objItem.appendChild( objName );
+                    objItem.appendChild( objType );
+                    objItem.appendChild( objProperties );
+
+                    this.objectsContainer.appendChild( objItem );
+
+                    this.connection.getObjectTypeById(
+                        objects[i].type,
+                        (response: any) => {
+
+                            const { objectType } = response;
+                            objType.innerHTML = objectType.name;
+
+                        },
+                        (message: string) => {
+                            console.warn( message );
+                        }
+                    )
+
+                }
+            },
+            (message: string) => {
+                console.warn( message );
+            }
+        )
+
+    }
+
 
 
 }
