@@ -11,6 +11,8 @@ import {ObjectsFilter} from "./ObjectsFilter";
 // HTML
 const objectsViewTemplate = require("../_view-templates/objects-view.html");
 
+// CSS
+import "../_style/style-sheets/objects-view.scss";
 
 
 

@@ -4,6 +4,7 @@
 import {ViewComponent} from "../core/ViewComponent";
 import {View} from "../core/View";
 
+
 export class ObjectsFilter extends ViewComponent {
 
 

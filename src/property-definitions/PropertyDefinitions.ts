@@ -11,7 +11,7 @@ import "../_style/style-sheets/property-definitions.scss";
 
 // HTML
 const modalTemplate = require("../_view-templates/property-definitions-add-modal.html");
-const template = require("../_view-templates/property-definitions.html" );
+const template = require("../_view-templates/property-definitions.html");
 
 
 
