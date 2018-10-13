@@ -73,6 +73,19 @@ export class ConnectionProxy extends CoreEntity {
 
 
 
+    public getObjectTypeById(id: string, success: Function, failure: Function): void {
+        this.httpRequest(
+            "GET",
+            "/api/v1/object-types/" + id,
+            null,
+            success,
+            failure
+        );
+    }
+
+
+
+
     public createObjectType(data: any, success: Function, failure: Function): void {
 
         this.httpRequest(

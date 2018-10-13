@@ -155,6 +155,24 @@ export class PropertyDefinitions extends ViewComponent {
 
                 self.propertyDefContainer.appendChild( propDefItem );
 
+
+                if ( propertyDef.dataType === PropertyDefinitionDatatypes.LOOKUP ) {
+
+                    this.connection.getObjectTypeById(
+                        propertyDef.objectType,
+                        (response: any) => {
+                            const { objectType } = response;
+
+                            propDefType.innerHTML += " - " + objectType.name;
+                        },
+                        (message: string) => {
+                            console.warn( message );
+                        }
+                    );
+
+                }
+
+
             },
             (message: string) => {
                 console.warn( message );
@@ -249,6 +267,24 @@ export class PropertyDefinitions extends ViewComponent {
                     propDefItem.appendChild( propDefType );
 
                     this.propertyDefContainer.appendChild( propDefItem );
+
+
+                    if ( properties[i].dataType === PropertyDefinitionDatatypes.LOOKUP ) {
+
+                        this.connection.getObjectTypeById(
+                            properties[i].objectType,
+                            (response: any) => {
+                                const { objectType } = response;
+
+                                propDefType.innerHTML += " - " + objectType.name;
+                            },
+                            (message: string) => {
+                                console.warn( message );
+                            }
+                        );
+
+                    }
+
                 }
             },
             (message: string) => {
