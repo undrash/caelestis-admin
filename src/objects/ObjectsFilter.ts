@@ -1,12 +1,10 @@
 
 
 
-
-
 import {ViewComponent} from "../core/ViewComponent";
 import {View} from "../core/View";
 
-export class Objects extends ViewComponent {
+export class ObjectsFilter extends ViewComponent {
 
 
 

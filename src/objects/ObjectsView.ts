@@ -5,16 +5,21 @@ import {INotification} from "../core/INotification";
 import {ISignal} from "../core/ISignal";
 import {ViewComponent} from "../core/ViewComponent";
 import {SystemConstants} from "../core/SystemConstants";
-import {Objects} from "./Objects";
+import {ObjectsListing} from "./ObjectsListing";
+import {ObjectsFilter} from "./ObjectsFilter";
 
-
+// HTML
+const objectsViewTemaplte = require("../_view-templates/objects-view.html");
 
 
 
 
 export class ObjectsView extends View {
-    private objects: ViewComponent;
-    private objectsContainer: HTMLElement;
+    private objectsFilter: ViewComponent;
+    private objectsFilterContainer: HTMLElement;
+
+    private objectsListing: ViewComponent;
+    private objectsListingContainer: HTMLElement;
 
 
     constructor() {
@@ -25,10 +30,13 @@ export class ObjectsView extends View {
 
         document.getElementById( SystemConstants.MAIN_CONTAINER ).appendChild( this.container );
 
-        this.objectsContainer = document.createElement( "div" );
-        this.container.appendChild( this.objectsContainer );
+        this.container.innerHTML = objectsViewTemaplte;
 
-        this.objects = new Objects( this, this.objectsContainer );
+        this.objectsFilterContainer = document.getElementById( "objects-filter-container" );
+        this.objectsListingContainer = document.getElementById( "objects-object-listing-container" );
+
+        this.objectsFilter = new ObjectsFilter( this, this.objectsFilterContainer );
+        this.objectsListing = new ObjectsListing( this, this.objectsListingContainer );
 
     }
 
@@ -45,7 +53,8 @@ export class ObjectsView extends View {
 
         this.exitCallback = callback;
 
-        this.objects.exitScene( exitType );
+        this.objectsFilter.exitScene( exitType );
+        this.objectsListing.exitScene( exitType );
 
     }
 
