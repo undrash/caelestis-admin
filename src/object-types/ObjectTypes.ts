@@ -1,5 +1,5 @@
 
-
+import {Promise} from 'es6-promise'
 
 import { ViewComponent } from "../core/ViewComponent";
 import { View } from "../core/View";
@@ -91,7 +91,7 @@ export class ObjectTypes extends ViewComponent {
         this.modalNewPD                     = document.getElementById( "property-definitions-modal-container" );
         this.modalNewPDNameInput            = document.getElementById( "pd-modal-input-name" ) as HTMLInputElement;
         this.modalNewPDDataTypeSelect       = document.getElementById( "pd-modal-select-data-type" ) as HTMLSelectElement;
-        this.modalNewPDObjectTypeContainer  = document.getElementById( "pd-modal-object-type-container" ) as HTMLInputElement;
+        this.modalNewPDObjectTypeContainer  = document.getElementById( "pd-modal-object-type-container" ) as HTMLElement;
         this.modalNewPDObjectTypeSelect     = document.getElementById( "pd-modal-select-object-type" ) as HTMLSelectElement;
         this.modalNewPDCancelBtn            = document.getElementById( "pd-modal-add-cancel" ) as HTMLButtonElement;
         this.modalNewPDOKBtn                = document.getElementById( "pd-modal-add-ok" ) as HTMLButtonElement;
@@ -101,6 +101,7 @@ export class ObjectTypes extends ViewComponent {
         this.modalBackgroundListener            = this.modalBackgroundListener.bind( this );
         this.modalOTaddBtnListener              = this.modalOTaddBtnListener.bind( this );
         this.modalOTCancelBtnListener           = this.modalOTCancelBtnListener.bind( this );
+        this.modalOTOKBtnListener               = this.modalOTOKBtnListener.bind( this );
         this.modalOTEditPropertiesListener      = this.modalOTEditPropertiesListener.bind( this );
         this.modalEditPDCancelBtnListener       = this.modalEditPDCancelBtnListener.bind( this );
         this.modalEditPDNewPropBtnListener      = this.modalEditPDNewPropBtnListener.bind( this );
@@ -120,6 +121,7 @@ export class ObjectTypes extends ViewComponent {
         this.addBtn.addEventListener( "click", this.modalOTaddBtnListener );
         this.modalBackground.addEventListener( "click", this.modalBackgroundListener );
         this.modalOTCancelBtn.addEventListener( "click", this.modalOTCancelBtnListener );
+        this.modalOTOKBtn.addEventListener( "click", this.modalOTOKBtnListener );
         this.modalOTSelectPropertiesBtn.addEventListener( "click", this.modalOTEditPropertiesListener );
         this.modalSelectPDCancelBtn.addEventListener( "click", this.modalEditPDCancelBtnListener );
         this.modalSelectPDNewPropBtn.addEventListener( "click", this.modalEditPDNewPropBtnListener );
@@ -138,6 +140,7 @@ export class ObjectTypes extends ViewComponent {
         this.addBtn.removeEventListener( "click", this.modalOTaddBtnListener );
         this.modalBackground.removeEventListener( "click", this.modalBackgroundListener );
         this.modalOTCancelBtn.removeEventListener( "click", this.modalOTCancelBtnListener );
+        this.modalOTOKBtn.removeEventListener( "click", this.modalOTOKBtnListener );
         this.modalOTSelectPropertiesBtn.removeEventListener( "click", this.modalOTEditPropertiesListener );
         this.modalSelectPDCancelBtn.removeEventListener( "click", this.modalEditPDCancelBtnListener );
         this.modalSelectPDNewPropBtn.removeEventListener( "click", this.modalEditPDNewPropBtnListener );
@@ -161,6 +164,7 @@ export class ObjectTypes extends ViewComponent {
     }
 
 
+
     private modalOTCancelBtnListener(e: any): void {
 
         console.info( "cancel btn clicked" );
@@ -176,10 +180,12 @@ export class ObjectTypes extends ViewComponent {
     }
 
 
+
     private modalEditPDCancelBtnListener(e: any): void {
         this.modalSelectPD.style.display = "none";
         this.modalOT.style.display = "block";
     }
+
 
 
     private modalEditPDNewPropBtnListener(e: any): void {
@@ -188,10 +194,12 @@ export class ObjectTypes extends ViewComponent {
     }
 
 
+
     private modalNewPDCancelBtnListener(e: any): void {
         this.modalNewPD.style.display = "none";
         this.modalSelectPD.style.display = "block";
     }
+
 
 
     private modalNewPDDataTypeChangeListener(e: any): void {
@@ -227,6 +235,7 @@ export class ObjectTypes extends ViewComponent {
         }
 
     }
+
 
 
     private modalNewPDOKBtnListener(e: any): void {
@@ -382,6 +391,92 @@ export class ObjectTypes extends ViewComponent {
 
 
 
+    private modalOTOKBtnListener(): void {
+
+        const propertyDefs = this.selectedProperties.map( p => p._id );
+        const requiredPropertyDefs = this.selectedProperties.filter( p => p.required === true ).map( p => p._id );
+        const name = this.modalOTNameInput.value;
+
+
+        this.modalBackground.style.display = "none";
+        this.modalOTNameInput.value = "";
+        this.modalOTPropertiesContainer.innerHTML = "";
+
+        this.connection.createObjectType(
+            {
+                name,
+                propertyDefs
+            },
+            (response: any) => {
+                const { objectType } = response;
+
+                console.info( "object type cooked: " + objectType );
+
+                let promises = [];
+
+                for ( let i = 0; i < requiredPropertyDefs.length; i++ ) {
+
+                    let p = new Promise( (resolve: Function, reject: Function) => {
+                        this.connection.setPropertyDefinitionRequired(
+                            {
+                                objectType: objectType._id,
+                                propertyDef: requiredPropertyDefs[i],
+                            },
+                            (response: any) => {
+
+                                console.log( "property def required update success for " + requiredPropertyDefs[i] );
+
+                                resolve( response );
+                            },
+                            (message: string) => {
+                                reject( message );
+                            }
+                        )
+                    });
+
+
+                    promises.push( p );
+                }
+
+                Promise.all( promises )
+                    .then( (result: any) => {
+
+                        console.info( "all promises fulfilled!!" );
+
+                        let otItem = document.createElement( "div" );
+                        otItem.id = objectType._id;
+                        otItem.className = "object-type-item";
+
+
+                        let propDefTitle = document.createElement( "p" );
+                        propDefTitle.className = "object-type-item-title";
+                        propDefTitle.innerHTML = objectType.name;
+
+                        let propDefType = document.createElement( "p" );
+                        propDefType.className = "object-type-item-properties";
+                        propDefType.innerHTML = objectType.properties.length;
+
+
+                        otItem.appendChild( propDefTitle );
+                        otItem.appendChild( propDefType );
+
+                        this.objectTypesContainer.appendChild( otItem );
+
+
+                    })
+                    .catch( (err: any) => {
+                        console.warn( err );
+                    });
+
+            },
+            (message: string) => {
+                console.warn( message );
+            }
+        )
+    }
+
+
+
     private createPropertyDefinition(): IPropertyDefinition {
 
         const name = this.modalNewPDNameInput.value;
@@ -409,7 +504,6 @@ export class ObjectTypes extends ViewComponent {
 
 
 
-
     private hideModals(): void {
         this.modalBackground.style.display  = "none";
         this.modalSelectPD.style.display      = "none";
@@ -421,6 +515,7 @@ export class ObjectTypes extends ViewComponent {
         this.modalSelectPDPropertyContainer.innerHTML = "";
 
     }
+
 
 
     public enterScene(): void {
@@ -527,6 +622,7 @@ export class ObjectTypes extends ViewComponent {
 
 
     }
+
 
 
     private parseDataType( datatype: number): string {

@@ -45,6 +45,18 @@ export class ConnectionProxy extends CoreEntity {
     }
 
 
+    public setPropertyDefinitionRequired(data: any, success: Function, failure: Function): void {
+
+        this.httpRequest(
+            "PUT",
+            "/api/v1/property-definitions/required",
+            data,
+            success,
+            failure
+        )
+
+    }
+
 
     public getObjectTypes(success: Function, failure: Function): void {
         console.info( "Proxy get object type executed." );
@@ -53,6 +65,20 @@ export class ConnectionProxy extends CoreEntity {
             "GET",
             "/api/v1/object-types/",
             null,
+            success,
+            failure
+        );
+
+    }
+
+
+
+    public createObjectType(data: any, success: Function, failure: Function): void {
+
+        this.httpRequest(
+            "POST",
+            "/api/v1/object-types/",
+            data,
             success,
             failure
         );

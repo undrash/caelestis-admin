@@ -8,7 +8,12 @@
     "baseUrl": ".",
     "paths": {
       "*": ["node_modules/*"]
-    }
+    },
+    "lib": [
+      "ES5",
+      "ES2015",
+      "DOM",
+      "ScriptHost"]
   },
   "include": [
     "app/**/*"
