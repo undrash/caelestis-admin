@@ -9,7 +9,7 @@ import {ObjectsListing} from "./ObjectsListing";
 import {ObjectsFilter} from "./ObjectsFilter";
 
 // HTML
-const objectsViewTemaplte = require("../_view-templates/objects-view.html");
+const objectsViewTemplate = require("../_view-templates/objects-view.html");
 
 
 
@@ -30,7 +30,7 @@ export class ObjectsView extends View {
 
         document.getElementById( SystemConstants.MAIN_CONTAINER ).appendChild( this.container );
 
-        this.container.innerHTML = objectsViewTemaplte;
+        this.container.innerHTML = objectsViewTemplate;
 
         this.objectsFilterContainer = document.getElementById( "objects-filter-container" );
         this.objectsListingContainer = document.getElementById( "objects-object-listing-container" );
