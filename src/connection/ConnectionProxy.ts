@@ -29,6 +29,18 @@ export class ConnectionProxy extends CoreEntity {
     }
 
 
+    public getPropertyDefinitionById(id: string, success: Function, failure: Function): void {
+        this.httpRequest(
+            "GET",
+            "/api/v1/property-definitions/" + id,
+            null,
+            success,
+            failure
+        );
+    }
+
+
+
 
     public createPropertyDefinition(data: IPropertyDefinition, success: Function, failure: Function): void {
         console.info( "Proxy create property definition executed." );

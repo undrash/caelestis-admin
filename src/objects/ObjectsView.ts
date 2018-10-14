@@ -44,7 +44,7 @@ export class ObjectsView extends View {
 
         this.objectsFilterContainer     = document.getElementById( "objects-filter-container" );
         this.objectsListingContainer    = document.getElementById( "objects-object-listing-container" );
-        this.objectCreateModalContainer = document.getElementById( "objects-object-create-modal" );
+        this.objectCreateModalContainer = document.getElementById( "objects-object-create-modal-container" );
 
         this.objectsFilter      = new ObjectsFilter( this, this.objectsFilterContainer );
         this.objectsListing     = new ObjectsListing( this, this.objectsListingContainer );
@@ -113,6 +113,7 @@ export class ObjectsView extends View {
     private objectListingAddBtnClicked(): void {
 
         this.objectsViewModalBackground.style.display = "block";
+        ( this.objectCreateModal as ObjectCreateModal ).populateObjectTypes();
 
     }
 
