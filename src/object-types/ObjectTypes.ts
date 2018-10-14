@@ -28,6 +28,7 @@ export class ObjectTypes extends ViewComponent {
     private modalOTSelectPropertiesBtn: HTMLButtonElement;
     private modalOTCancelBtn: HTMLButtonElement;
     private modalOTOKBtn: HTMLButtonElement;
+    private modalOTSetNameBtn: HTMLButtonElement;
 
 
     private modalSelectPD: HTMLElement;
@@ -49,6 +50,8 @@ export class ObjectTypes extends ViewComponent {
     private availableProperties: any[];
     private selectedProperties: any[];
 
+    private objectTypeNameProperty: string;
+
 
 
     constructor(view: View, container: HTMLElement) {
@@ -56,6 +59,7 @@ export class ObjectTypes extends ViewComponent {
 
         this.availableProperties = [];
         this.selectedProperties = [];
+        this.objectTypeNameProperty = null;
 
 
         this.container.innerHTML = template;
@@ -79,6 +83,7 @@ export class ObjectTypes extends ViewComponent {
         this.modalOTSelectPropertiesBtn     = document.getElementById( "ot-modal-edit-property-btn" ) as HTMLButtonElement;
         this.modalOTCancelBtn               = document.getElementById( "ot-modal-cancel-btn" ) as HTMLButtonElement;
         this.modalOTOKBtn                   = document.getElementById( "ot-modal-ok-btn" ) as HTMLButtonElement;
+        this.modalOTSetNameBtn              = document.getElementById( "ot-modal-set-name-property-btn" ) as HTMLButtonElement;
 
 
         this.modalSelectPD                     = document.getElementById( "ot-select-properties-modal-container" );
@@ -109,6 +114,8 @@ export class ObjectTypes extends ViewComponent {
         this.modalNewPDDataTypeChangeListener   = this.modalNewPDDataTypeChangeListener.bind( this );
         this.modalNewPDOKBtnListener            = this.modalNewPDOKBtnListener.bind( this );
         this.modalEditPDOKBtnListener           = this.modalEditPDOKBtnListener.bind( this );
+        this.modalOTPropertySelectionListener   = this.modalOTPropertySelectionListener.bind( this );
+        this.modalOTSetNameBtnListener          = this.modalOTSetNameBtnListener.bind( this );
 
 
         this.enterScene();
@@ -129,6 +136,7 @@ export class ObjectTypes extends ViewComponent {
         this.modalNewPDDataTypeSelect.addEventListener( "change", this.modalNewPDDataTypeChangeListener );
         this.modalNewPDOKBtn.addEventListener( "click", this.modalNewPDOKBtnListener );
         this.modalSelectPDOKBtn.addEventListener( "click", this.modalEditPDOKBtnListener );
+        this.modalOTSetNameBtn.addEventListener( "click", this.modalOTSetNameBtnListener );
 
 
     }
@@ -148,6 +156,8 @@ export class ObjectTypes extends ViewComponent {
         this.modalNewPDDataTypeSelect.removeEventListener( "change", this.modalNewPDDataTypeChangeListener );
         this.modalNewPDOKBtn.removeEventListener( "click", this.modalNewPDOKBtnListener );
         this.modalSelectPDOKBtn.removeEventListener( "click", this.modalEditPDOKBtnListener );
+        this.modalOTSetNameBtn.removeEventListener( "click", this.modalOTSetNameBtnListener );
+
 
     }
 
@@ -351,6 +361,7 @@ export class ObjectTypes extends ViewComponent {
 
 
             let propDefRequiredCheckbox = document.createElement( "input" );
+            propDefRequiredCheckbox.id = property._id + "-checkbox-required";
             propDefRequiredCheckbox.type = "checkbox";
             propDefRequiredCheckbox.className = "ot-modal-property-required-checkbox";
 
@@ -362,6 +373,8 @@ export class ObjectTypes extends ViewComponent {
 
             this.modalOTPropertiesContainer.appendChild( propDefItem );
 
+
+            propDefItem.addEventListener( "click", this.modalOTPropertySelectionListener );
 
             propDefRequiredCheckbox.addEventListener( "change", (e: any) => {
 
@@ -396,6 +409,7 @@ export class ObjectTypes extends ViewComponent {
         const propertyDefs = this.selectedProperties.map( p => p._id );
         const requiredPropertyDefs = this.selectedProperties.filter( p => p.required === true ).map( p => p._id );
         const name = this.modalOTNameInput.value;
+        const nameProperty = this.objectTypeNameProperty;
 
 
         this.modalBackground.style.display = "none";
@@ -405,6 +419,7 @@ export class ObjectTypes extends ViewComponent {
         this.connection.createObjectType(
             {
                 name,
+                nameProperty,
                 propertyDefs
             },
             (response: any) => {
@@ -473,6 +488,60 @@ export class ObjectTypes extends ViewComponent {
                 console.warn( message );
             }
         )
+    }
+
+
+
+    private modalOTPropertySelectionListener(e: any): void {
+
+        const properties = document.getElementsByClassName( "ot-modal-property" );
+
+        for ( let i = 0; i < properties.length; i++ ) {
+            properties[i].classList.remove( "property-selected" );
+        }
+
+
+        if ( e.target.classList.contains( "ot-modal-property" ) ) {
+            e.target.classList.add( "property-selected" );
+        } else {
+            e.target.parentElement.classList.add( "property-selected" );
+        }
+
+    }
+
+
+    private modalOTSetNameBtnListener(e: any): void {
+
+        console.log( "set name clicked" );
+        console.log( document.getElementsByClassName( "property-selected" ) );
+
+        if ( ! document.getElementsByClassName( "property-selected" ).length ) return;
+
+        console.log( "no return" );
+
+        const property = document.getElementsByClassName( "property-selected" )[0];
+
+        this.objectTypeNameProperty = property.id;
+
+        console.log( "name property " + this.objectTypeNameProperty );
+
+        const checkboxes = document.getElementsByClassName( "ot-modal-property-required-checkbox" );
+
+        console.log( "checkboxes" );
+        console.log( checkboxes );
+
+        for ( let i = 0; i < checkboxes.length; i++ ) {
+            (checkboxes[i] as HTMLInputElement).disabled = false;
+        }
+
+        const checkbox = document.getElementById( property.id + "-checkbox-required" ) as HTMLInputElement;
+
+        console.log( checkbox );
+
+        checkbox.checked = true;
+        checkbox.disabled = true;
+
+
     }
 
 
@@ -563,7 +632,6 @@ export class ObjectTypes extends ViewComponent {
                     otItem.appendChild( propDefType );
 
                     this.objectTypesContainer.appendChild( otItem );
-
                 }
 
             },
@@ -610,7 +678,6 @@ export class ObjectTypes extends ViewComponent {
                     property.appendChild( dataType );
 
                     this.modalSelectPDPropertyContainer.appendChild( property );
-
                 }
 
 
