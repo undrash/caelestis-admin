@@ -12,11 +12,13 @@ const template = require("../_view-templates/objects-listing.html");
 
 // CSS
 import "../_style/style-sheets/objects-listing.scss";
+import {ObjectNotifications} from "./ObjectNotifications";
 
 
 export class ObjectsListing extends ViewComponent {
 
     private objectsContainer: HTMLElement;
+    private addBtn: HTMLButtonElement;
 
 
     constructor(view: View, container: HTMLElement) {
@@ -26,6 +28,12 @@ export class ObjectsListing extends ViewComponent {
         this.container.innerHTML = template;
 
         this.objectsContainer = document.getElementById( "object-listing-objects-container" );
+        this.addBtn = document.getElementById( "object-listing-add-btn" ) as HTMLButtonElement;
+
+
+
+        this.addBtnEventListener = this.addBtnEventListener.bind( this );
+
 
         this.enterScene();
     }
@@ -34,16 +42,22 @@ export class ObjectsListing extends ViewComponent {
 
     private registerEventListeners(): void {
 
+        this.addBtn.addEventListener( "click", this.addBtnEventListener );
 
     }
-
 
 
     private unregisterEventListeners(): void {
 
+        this.addBtn.removeEventListener( "click", this.addBtnEventListener );
 
     }
 
+
+
+    private addBtnEventListener(e: any): void {
+        this.sendSignal( ObjectNotifications.OBJECTS_LISTING_ADD_BTN_CLICKED );
+    }
 
 
     public enterScene(): void {

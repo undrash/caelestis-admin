@@ -13,15 +13,21 @@ const objectsViewTemplate = require("../_view-templates/objects-view.html");
 
 // CSS
 import "../_style/style-sheets/objects-view.scss";
+import {ObjectNotifications} from "./ObjectNotifications";
+import {ObjectCreateModal} from "./ObjectCreateModal";
 
 
 
 export class ObjectsView extends View {
     private objectsFilter: ViewComponent;
-    private objectsFilterContainer: HTMLElement;
-
     private objectsListing: ViewComponent;
+    private objectCreateModal: ViewComponent;
+
+    private objectsFilterContainer: HTMLElement;
     private objectsListingContainer: HTMLElement;
+    private objectCreateModalContainer: HTMLElement;
+
+    private objectsViewModalBackground: HTMLElement;
 
 
     constructor() {
@@ -34,17 +40,49 @@ export class ObjectsView extends View {
 
         this.container.innerHTML = objectsViewTemplate;
 
-        this.objectsFilterContainer = document.getElementById( "objects-filter-container" );
-        this.objectsListingContainer = document.getElementById( "objects-object-listing-container" );
+        this.objectsViewModalBackground = document.getElementById( "objects-view-modal-background" );
 
-        this.objectsFilter = new ObjectsFilter( this, this.objectsFilterContainer );
-        this.objectsListing = new ObjectsListing( this, this.objectsListingContainer );
+        this.objectsFilterContainer     = document.getElementById( "objects-filter-container" );
+        this.objectsListingContainer    = document.getElementById( "objects-object-listing-container" );
+        this.objectCreateModalContainer = document.getElementById( "objects-object-create-modal" );
 
+        this.objectsFilter      = new ObjectsFilter( this, this.objectsFilterContainer );
+        this.objectsListing     = new ObjectsListing( this, this.objectsListingContainer );
+        this.objectCreateModal  = new ObjectCreateModal( this, this.objectCreateModalContainer );
+
+
+        this.objectsViewModalBackgroundClickHandler = this.objectsViewModalBackgroundClickHandler.bind( this );
+
+
+        this.enterScene();
     }
 
 
 
+    private registerEventListeners(): void {
+
+        this.objectsViewModalBackground.addEventListener( "click", this.objectsViewModalBackgroundClickHandler );
+
+    }
+
+    private unregisterEventListeners(): void {
+
+        this.objectsViewModalBackground.removeEventListener( "click", this.objectsViewModalBackgroundClickHandler );
+    }
+
+
+    private objectsViewModalBackgroundClickHandler(e: any): void {
+
+        if ( e.target.id === this.objectsViewModalBackground.id ) {
+            this.objectsViewModalBackground.style.display = "none";
+        }
+
+
+    }
+
+
     public enterScene(): void {
+        this.registerEventListeners();
 
 
     }
@@ -52,11 +90,13 @@ export class ObjectsView extends View {
 
 
     public exitScene(exitType: string, callback: Function): void {
+        this.unregisterEventListeners();
 
         this.exitCallback = callback;
 
         this.objectsFilter.exitScene( exitType );
         this.objectsListing.exitScene( exitType );
+        this.objectCreateModal.exitScene( exitType );
 
     }
 
@@ -66,6 +106,14 @@ export class ObjectsView extends View {
         let notifications = super.listNotificationInterests();
 
         return notifications;
+    }
+
+
+
+    private objectListingAddBtnClicked(): void {
+
+        this.objectsViewModalBackground.style.display = "block";
+
     }
 
 
@@ -88,6 +136,13 @@ export class ObjectsView extends View {
         console.log( "Signal received in " + this.NAME + ": " + signal.name );
 
         switch ( signal.name ) {
+
+            case ObjectNotifications.OBJECTS_LISTING_ADD_BTN_CLICKED :
+
+                this.objectListingAddBtnClicked();
+
+                break;
+
 
             default:
                 break;
