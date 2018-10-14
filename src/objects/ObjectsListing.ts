@@ -80,7 +80,18 @@ export class ObjectsListing extends ViewComponent {
 
                     let objName = document.createElement( "span" );
                     objName.className = "object-item-name";
-                    objName.innerHTML = objects[i].name;
+
+
+                    for ( let j = 0; j < objects[i].properties.length; j++ ) {
+
+                        if ( objects[i].properties[j].propertyDef === objects[i].nameProperty ) {
+
+                            objName.innerHTML = objects[i].properties[j].value;
+                            break;
+                        }
+
+                    }
+
 
                     let objType = document.createElement( "span" );
                     objType.className = "object-item-type";
@@ -90,8 +101,8 @@ export class ObjectsListing extends ViewComponent {
                     objProperties.innerHTML = objects[i].properties.length;
 
                     objItem.appendChild( objName );
-                    objItem.appendChild( objType );
                     objItem.appendChild( objProperties );
+                    objItem.appendChild( objType );
 
                     this.objectsContainer.appendChild( objItem );
 
