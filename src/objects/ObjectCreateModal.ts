@@ -138,6 +138,9 @@ export class ObjectCreateModal extends ViewComponent {
             (response: any) => {
                 const { object } = response;
 
+                console.info( "New object created!" );
+                console.log( object );
+
                 this.sendSignal( ObjectNotifications.OBJECTS_CREATE_OBJECT_CREATED, object );
             },
             (message: string) => {
@@ -244,7 +247,7 @@ export class ObjectCreateModal extends ViewComponent {
         propValTitle.className = "property-value-name";
         propValTitle.innerHTML = prop.name;
 
-        let propValInput;
+        let propValInput: any;
 
 
         switch ( prop.dataType ) {
@@ -269,6 +272,28 @@ export class ObjectCreateModal extends ViewComponent {
 
                 propValInput = document.createElement( "select" );
                 propValInput.className = "property-value property-value-select";
+
+                this.connection.getObjectByType(
+                    prop.objectType,
+                    (response: any) => {
+                        const { objects } = response;
+
+                        for ( let object of objects ) {
+
+                            let option = document.createElement( "option" );
+                            option.value = object._id;
+
+                            const titleProp = object.properties.filter( (p: any) => p.propertyDef === object.nameProperty )[0];
+
+                            option.text = titleProp.value;
+
+                            propValInput.add( option );
+                        }
+                    },
+                    (message: string) => {
+                        console.warn( message );
+                    }
+                );
 
                 break;
 

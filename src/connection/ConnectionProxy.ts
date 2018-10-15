@@ -125,6 +125,18 @@ export class ConnectionProxy extends CoreEntity {
     }
 
 
+    //TODO should work via Search Conditions
+    public getObjectByType(type: string, success: Function, failure: Function): void {
+        this.httpRequest(
+            "GET",
+            "/api/v1/objects/type/" + type,
+            null,
+            success,
+            failure
+        );
+    }
+
+
 
     public createObject(data: any, success: Function, failure: Function): void {
 
