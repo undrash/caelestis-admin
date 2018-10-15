@@ -155,6 +155,13 @@ export class ObjectsView extends View {
 
                 break;
 
+            case ObjectNotifications.OBJECTS_CREATE_OBJECT_CREATED :
+
+                this.hideObjectCreateModal();
+                ( this.objectsListing as ObjectsListing ).createListItemFromObject( signal.data );
+
+                break;
+
 
             default:
                 break;

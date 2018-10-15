@@ -122,7 +122,19 @@ export class ConnectionProxy extends CoreEntity {
             failure
         );
 
+    }
 
+
+
+    public createObject(data: any, success: Function, failure: Function): void {
+
+        this.httpRequest(
+            "POST",
+            "/api/v1/objects/",
+            data,
+            success,
+            failure
+        )
 
     }
 

@@ -89,10 +89,62 @@ export class ObjectCreateModal extends ViewComponent {
 
         const objectTypeId = this.objectTypeSelect.options[ this.objectTypeSelect.selectedIndex ].value;
         const objectType = this.objectTypes[ objectTypeId ];
+
+
+
+
+        const propertyInputs = document.getElementsByClassName( "property-value" );
+
         let properties = [];
 
+        for ( let i = 0; i < propertyInputs.length; i++ ) {
+
+            const input = propertyInputs[i];
+
+            let propVal: any = { propertyDef: input.id, value: null };
+
+            if ( input.classList.contains( "property-value-checkbox" ) ) {
+
+                propVal.value = ( input as HTMLInputElement ).checked;
+
+            } else if ( input.classList.contains( "property-value-select" ) ) {
+
+                const option = ( input as HTMLSelectElement ).options[ ( input as HTMLSelectElement ).selectedIndex ];
+
+                if ( option ) {
+                    propVal.value = option.value;
+                } else {
+                    propVal.value = null;
+                }
 
 
+
+            } else {
+
+                propVal.value = ( input as HTMLInputElement ).value;
+
+            }
+
+            properties.push( propVal );
+
+        }
+
+
+        this.connection.createObject(
+            {
+                type: objectTypeId,
+                properties
+            },
+            (response: any) => {
+                const { object } = response;
+
+                this.sendSignal( ObjectNotifications.OBJECTS_CREATE_OBJECT_CREATED, object );
+            },
+            (message: string) => {
+                console.warn( message );
+            }
+
+        )
 
 
 
@@ -216,7 +268,7 @@ export class ObjectCreateModal extends ViewComponent {
             case PropertyDefinitionDatatypes.LOOKUP :
 
                 propValInput = document.createElement( "select" );
-                propValInput.className = "property-value";
+                propValInput.className = "property-value property-value-select";
 
                 break;
 
@@ -232,7 +284,7 @@ export class ObjectCreateModal extends ViewComponent {
 
                 propValInput = document.createElement( "input" );
                 propValInput.type = "checkbox";
-                propValInput.className = "property-value-checkbox";
+                propValInput.className = "property-value property-value-checkbox";
 
                 break;
 

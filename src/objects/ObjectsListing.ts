@@ -87,53 +87,108 @@ export class ObjectsListing extends ViewComponent {
 
                 for ( let i = 0; i < objects.length; i++ ) {
 
-                    let objItem = document.createElement( "div" );
-                    objItem.id = objects[i]._id;
-                    objItem.className = "object-item";
+                    this.createListItemFromObject( objects[i] );
 
 
-                    let objName = document.createElement( "span" );
-                    objName.className = "object-item-name";
-
-
-                    for ( let j = 0; j < objects[i].properties.length; j++ ) {
-
-                        if ( objects[i].properties[j].propertyDef === objects[i].nameProperty ) {
-
-                            objName.innerHTML = objects[i].properties[j].value;
-                            break;
-                        }
-
-                    }
-
-
-                    let objType = document.createElement( "span" );
-                    objType.className = "object-item-type";
-
-                    let objProperties = document.createElement( "span" );
-                    objProperties.className = "object-item-properties";
-                    objProperties.innerHTML = objects[i].properties.length;
-
-                    objItem.appendChild( objName );
-                    objItem.appendChild( objProperties );
-                    objItem.appendChild( objType );
-
-                    this.objectsContainer.appendChild( objItem );
-
-                    this.connection.getObjectTypeById(
-                        objects[i].type,
-                        (response: any) => {
-
-                            const { objectType } = response;
-                            objType.innerHTML = objectType.name;
-
-                        },
-                        (message: string) => {
-                            console.warn( message );
-                        }
-                    )
+                    // let objItem = document.createElement( "div" );
+                    // objItem.id = objects[i]._id;
+                    // objItem.className = "object-item";
+                    //
+                    //
+                    // let objName = document.createElement( "span" );
+                    // objName.className = "object-item-name";
+                    //
+                    //
+                    // for ( let j = 0; j < objects[i].properties.length; j++ ) {
+                    //
+                    //     if ( objects[i].properties[j].propertyDef === objects[i].nameProperty ) {
+                    //
+                    //         objName.innerHTML = objects[i].properties[j].value;
+                    //         break;
+                    //     }
+                    //
+                    // }
+                    //
+                    //
+                    // let objType = document.createElement( "span" );
+                    // objType.className = "object-item-type";
+                    //
+                    // let objProperties = document.createElement( "span" );
+                    // objProperties.className = "object-item-properties";
+                    // objProperties.innerHTML = objects[i].properties.length;
+                    //
+                    // objItem.appendChild( objName );
+                    // objItem.appendChild( objProperties );
+                    // objItem.appendChild( objType );
+                    //
+                    // this.objectsContainer.appendChild( objItem );
+                    //
+                    // this.connection.getObjectTypeById(
+                    //     objects[i].type,
+                    //     (response: any) => {
+                    //
+                    //         const { objectType } = response;
+                    //         objType.innerHTML = objectType.name;
+                    //
+                    //     },
+                    //     (message: string) => {
+                    //         console.warn( message );
+                    //     }
+                    // )
 
                 }
+            },
+            (message: string) => {
+                console.warn( message );
+            }
+        )
+
+    }
+
+
+    public createListItemFromObject(object: any): void {
+
+
+        let objItem = document.createElement( "div" );
+        objItem.id = object._id;
+        objItem.className = "object-item";
+
+
+        let objName = document.createElement( "span" );
+        objName.className = "object-item-name";
+
+
+        for ( let j = 0; j < object.properties.length; j++ ) {
+
+            if ( object.properties[j].propertyDef === object.nameProperty ) {
+
+                objName.innerHTML = object.properties[j].value;
+                break;
+            }
+
+        }
+
+
+        let objType = document.createElement( "span" );
+        objType.className = "object-item-type";
+
+        let objProperties = document.createElement( "span" );
+        objProperties.className = "object-item-properties";
+        objProperties.innerHTML = object.properties.length;
+
+        objItem.appendChild( objName );
+        objItem.appendChild( objProperties );
+        objItem.appendChild( objType );
+
+        this.objectsContainer.appendChild( objItem );
+
+        this.connection.getObjectTypeById(
+            object.type,
+            (response: any) => {
+
+                const { objectType } = response;
+                objType.innerHTML = objectType.name;
+
             },
             (message: string) => {
                 console.warn( message );
