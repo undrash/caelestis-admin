@@ -118,6 +118,11 @@ export class ObjectsView extends View {
     }
 
 
+    private hideObjectCreateModal(): void {
+        this.objectsViewModalBackground.style.display = "none";
+    }
+
+
 
     public handleNotification(notification: INotification): void {
 
@@ -141,6 +146,12 @@ export class ObjectsView extends View {
             case ObjectNotifications.OBJECTS_LISTING_ADD_BTN_CLICKED :
 
                 this.objectListingAddBtnClicked();
+
+                break;
+
+            case ObjectNotifications.OBJECTS_CREATE_HIDE :
+
+                this.hideObjectCreateModal();
 
                 break;
 

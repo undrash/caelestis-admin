@@ -4,7 +4,7 @@
   background-color: white;
   padding: 40px;
   width: 490px;
-  margin: 14% auto auto;
+  margin: 30% auto auto;
   -webkit-box-shadow: -2px 11px 29px -12px rgba(0, 0, 0, 0.61);
   -moz-box-shadow: -2px 11px 29px -12px rgba(0, 0, 0, 0.61);
   box-shadow: -2px 11px 29px -12px rgba(0, 0, 0, 0.61);
@@ -49,6 +49,14 @@
       width: 230px;
       float: right;
       padding-left: 10px;
+    }
+
+    .property-value-checkbox {
+      -webkit-appearance: checkbox;
+      padding: 0;
+      height: 30px;
+      width: 30px;
+      float: right;
     }
 
 

@@ -9,6 +9,7 @@ import {View} from "../core/View";
 // CSS
 import "../_style/style-sheets/objects-create-modal.scss";
 import {PropertyDefinitionDatatypes} from "../property-definitions/PropertyDefinitionDatatypes";
+import {ObjectNotifications} from "./ObjectNotifications";
 
 // HTML
 const template = require( "../_view-templates/objects-create-modal.html" );
@@ -41,6 +42,9 @@ export class ObjectCreateModal extends ViewComponent {
 
 
         this.objectTypeSelectChangeListener = this.objectTypeSelectChangeListener.bind( this );
+        this.cancelBtnListener              = this.cancelBtnListener.bind( this );
+        this.createBtnListener              = this.createBtnListener.bind( this );
+
 
         this.enterScene();
     }
@@ -50,6 +54,9 @@ export class ObjectCreateModal extends ViewComponent {
     private registerEventListeners(): void {
 
         this.objectTypeSelect.addEventListener( "change", this.objectTypeSelectChangeListener );
+        this.cancelBtn.addEventListener( "click", this.cancelBtnListener );
+        this.createBtn.addEventListener( "click", this.createBtnListener );
+
 
     }
 
@@ -58,6 +65,8 @@ export class ObjectCreateModal extends ViewComponent {
     private unregisterEventListeners(): void {
 
         this.objectTypeSelect.removeEventListener( "change", this.objectTypeSelectChangeListener );
+        this.cancelBtn.removeEventListener( "click", this.cancelBtnListener );
+        this.createBtn.removeEventListener( "click", this.createBtnListener );
 
     }
 
@@ -66,6 +75,26 @@ export class ObjectCreateModal extends ViewComponent {
 
         this.propertiesContainer.innerHTML = "";
         this.populatePropertyValues();
+
+    }
+
+
+    private cancelBtnListener(e: any): void {
+        this.sendSignal( ObjectNotifications.OBJECTS_CREATE_HIDE );
+    }
+
+
+
+    private createBtnListener(e: any): void {
+
+        const objectTypeId = this.objectTypeSelect.options[ this.objectTypeSelect.selectedIndex ].value;
+        const objectType = this.objectTypes[ objectTypeId ];
+        let properties = [];
+
+
+
+
+
 
     }
 
@@ -88,6 +117,10 @@ export class ObjectCreateModal extends ViewComponent {
 
 
     public populateObjectTypes(): void {
+
+
+        this.objectTypeSelect.innerHTML = "";
+        this.objectTypes = {};
 
         this.connection.getObjectTypes(
             (response: any) => {
@@ -168,6 +201,7 @@ export class ObjectCreateModal extends ViewComponent {
 
                 propValInput = document.createElement( "input" );
                 propValInput.type = "text";
+                propValInput.className = "property-value";
 
                 break;
 
@@ -175,13 +209,14 @@ export class ObjectCreateModal extends ViewComponent {
 
                 propValInput = document.createElement( "input" );
                 propValInput.type = "number";
+                propValInput.className = "property-value";
 
                 break;
 
             case PropertyDefinitionDatatypes.LOOKUP :
 
                 propValInput = document.createElement( "select" );
-
+                propValInput.className = "property-value";
 
                 break;
 
@@ -189,6 +224,7 @@ export class ObjectCreateModal extends ViewComponent {
 
                 propValInput = document.createElement( "input" );
                 propValInput.type = "date";
+                propValInput.className = "property-value";
 
                 break;
 
@@ -196,6 +232,7 @@ export class ObjectCreateModal extends ViewComponent {
 
                 propValInput = document.createElement( "input" );
                 propValInput.type = "checkbox";
+                propValInput.className = "property-value-checkbox";
 
                 break;
 
@@ -205,11 +242,11 @@ export class ObjectCreateModal extends ViewComponent {
 
         }
 
-        propValInput.id = prop.id;
-        propValInput.className = "property-value";
+        propValInput.id = prop._id;
 
         propValContainer.appendChild( propValTitle );
         propValContainer.appendChild( propValInput );
+
 
         this.propertiesContainer.appendChild( propValContainer );
 
