@@ -7,11 +7,13 @@ import { View } from "../core/View";
 
 // CSS
 import "../_style/style-sheets/property-definitions.scss";
+import "../_style/style-sheets/property-definitions-menu-dropdown.scss";
 
 
 // HTML
 const modalTemplate = require("../_view-templates/property-definitions-add-modal.html");
 const template = require("../_view-templates/property-definitions.html");
+const dropDownMenuTemplate = require("../_view-templates/property-definitions-menu-dropdown.html");
 
 
 
@@ -21,6 +23,7 @@ export class PropertyDefinitions extends ViewComponent {
 
     private propertyDefContainer: HTMLElement;
     private addBtn: HTMLButtonElement;
+
     private modalBackground: HTMLElement;
     private modalContainer: HTMLElement;
     private modalCancelBtn: HTMLButtonElement;
@@ -30,6 +33,12 @@ export class PropertyDefinitions extends ViewComponent {
     private modalPropObjectType: HTMLSelectElement;
     private modalObjectTypeContainer: HTMLElement;
 
+    private dropdownMenuBackground: HTMLElement;
+    private dropdownMenu: HTMLElement;
+    private dropdownMenuEdit: HTMLElement;
+    private dropdownMenuDelete: HTMLElement;
+
+    private activePropertyDef: string;
 
     constructor(view: View, container: HTMLElement) {
         super( view, container );
@@ -58,11 +67,23 @@ export class PropertyDefinitions extends ViewComponent {
         this.modalOKBtn                 = document.getElementById( "pd-modal-add-ok" ) as HTMLButtonElement;
 
 
-        this.modalBackgroundListener    = this.modalBackgroundListener.bind( this );
-        this.cancelBtnListener          = this.cancelBtnListener.bind( this );
-        this.addBtnListener             = this.addBtnListener.bind( this );
-        this.okBtnListener              = this.okBtnListener.bind( this );
-        this.dataTypeChangeListener     = this.dataTypeChangeListener.bind( this );
+        this.container.insertAdjacentHTML( "beforeend", dropDownMenuTemplate );
+
+        this.dropdownMenuBackground     = document.getElementById( "pd-menu-dropdown-background" );
+        this.dropdownMenu               = document.getElementById( "pd-menu-dropdown" );
+        this.dropdownMenuEdit           = document.getElementById( "pd-menu-dropdown-item-edit" );
+        this.dropdownMenuDelete         = document.getElementById( "pd-menu-dropdown-item-delete" );
+
+
+        this.modalBackgroundListener            = this.modalBackgroundListener.bind( this );
+        this.cancelBtnListener                  = this.cancelBtnListener.bind( this );
+        this.addBtnListener                     = this.addBtnListener.bind( this );
+        this.okBtnListener                      = this.okBtnListener.bind( this );
+        this.dataTypeChangeListener             = this.dataTypeChangeListener.bind( this );
+        this.propertyDefItemMousedownListener   = this.propertyDefItemMousedownListener.bind( this );
+        this.dropdownMenuBackgroundListener     = this.dropdownMenuBackgroundListener.bind( this );
+        this.dropDownMenuEditListener           = this.dropDownMenuEditListener.bind( this );
+        this.dropDownMenuDeleteListener         = this.dropDownMenuDeleteListener.bind( this );
 
 
         this.enterScene();
@@ -77,6 +98,10 @@ export class PropertyDefinitions extends ViewComponent {
         this.modalCancelBtn.addEventListener( "click", this.cancelBtnListener );
         this.modalBackground.addEventListener( "click", this.modalBackgroundListener );
         this.modalPropDataType.addEventListener( "change", this.dataTypeChangeListener );
+        this.dropdownMenuBackground.addEventListener( "click", this.dropdownMenuBackgroundListener );
+        this.dropdownMenuEdit.addEventListener( "click", this.dropDownMenuEditListener );
+        this.dropdownMenuDelete.addEventListener( "click", this.dropDownMenuDeleteListener );
+
 
 
     }
@@ -90,6 +115,9 @@ export class PropertyDefinitions extends ViewComponent {
         this.modalCancelBtn.removeEventListener( "click", this.cancelBtnListener );
         this.modalBackground.removeEventListener( "click", this.modalBackgroundListener );
         this.modalPropDataType.removeEventListener( "change", this.dataTypeChangeListener );
+        this.dropdownMenuBackground.removeEventListener( "click", this.dropdownMenuBackgroundListener );
+        this.dropdownMenuEdit.removeEventListener( "click", this.dropDownMenuEditListener );
+        this.dropdownMenuDelete.removeEventListener( "click", this.dropDownMenuDeleteListener );
 
     }
 
@@ -112,6 +140,16 @@ export class PropertyDefinitions extends ViewComponent {
         if ( e.target.id === this.modalBackground.id ) this.hideNewPropDefModal();
     }
 
+
+    private propertyDefItemMousedownListener(e: any): void {
+        if ( e.which === 3 ) {
+            this.dropdownMenu.style.top = e.pageY + "px";
+            this.dropdownMenu.style.left = e.pageX + "px";
+
+            this.activePropertyDef = e.target.id;
+            this.dropdownMenuBackground.style.display = "block";
+        }
+    }
 
 
     private hideNewPropDefModal(): void {
@@ -154,6 +192,8 @@ export class PropertyDefinitions extends ViewComponent {
                 propDefItem.appendChild( propDefType );
 
                 self.propertyDefContainer.appendChild( propDefItem );
+
+                propDefItem.addEventListener( "mousedown", this.propertyDefItemMousedownListener );
 
 
                 if ( propertyDef.dataType === PropertyDefinitionDatatypes.LOOKUP ) {
@@ -219,6 +259,23 @@ export class PropertyDefinitions extends ViewComponent {
 
 
 
+    private dropdownMenuBackgroundListener(e: any): void {
+        if ( e.target.id == this.dropdownMenuBackground.id ) this.dropdownMenuBackground.style.display = "none";
+    }
+
+
+    private dropDownMenuEditListener(e: any): void {
+        console.info( "edit clicked" );
+        this.dropdownMenuBackground.style.display = "none";
+    }
+
+
+    private dropDownMenuDeleteListener(e: any): void {
+        console.info( "delete clicked" );
+        this.dropdownMenuBackground.style.display = "none";
+    }
+
+
     public enterScene(): void {
         this.registerEventListeners();
 
@@ -268,6 +325,7 @@ export class PropertyDefinitions extends ViewComponent {
 
                     this.propertyDefContainer.appendChild( propDefItem );
 
+                    propDefItem.addEventListener( "mousedown", this.propertyDefItemMousedownListener );
 
                     if ( properties[i].dataType === PropertyDefinitionDatatypes.LOOKUP ) {
 
