@@ -43,7 +43,6 @@ export class ConnectionProxy extends CoreEntity {
 
 
     public createPropertyDefinition(data: IPropertyDefinition, success: Function, failure: Function): void {
-        console.info( "Proxy create property definition executed." );
 
         this.httpRequest(
             "POST",
@@ -52,9 +51,21 @@ export class ConnectionProxy extends CoreEntity {
             success,
             failure
         );
-
-
     }
+
+
+
+    public editPropertyDefinitionName(data: any, success: Function, failure: Function): void {
+
+        this.httpRequest(
+          "PUT",
+          "/api/v1/property-definitions/edit/",
+          data,
+          success,
+          failure
+        );
+    }
+
 
 
     public setPropertyDefinitionRequired(data: any, success: Function, failure: Function): void {
