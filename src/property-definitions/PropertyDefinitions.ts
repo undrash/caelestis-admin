@@ -7,13 +7,13 @@ import { View } from "../core/View";
 
 // CSS
 import "../_style/style-sheets/property-definitions.scss";
-import "../_style/style-sheets/property-definitions-menu-dropdown.scss";
+import "../_style/style-sheets/listing-menu-dropdown.scss";
 
 
 // HTML
 const modalTemplate = require("../_view-templates/property-definitions-add-modal.html");
 const template = require("../_view-templates/property-definitions.html");
-const dropDownMenuTemplate = require("../_view-templates/property-definitions-menu-dropdown.html");
+const dropDownMenuTemplate = require("../_view-templates/listing-menu-dropdown.html");
 
 
 
@@ -69,10 +69,10 @@ export class PropertyDefinitions extends ViewComponent {
 
         this.container.insertAdjacentHTML( "beforeend", dropDownMenuTemplate );
 
-        this.dropdownMenuBackground     = document.getElementById( "pd-menu-dropdown-background" );
-        this.dropdownMenu               = document.getElementById( "pd-menu-dropdown" );
-        this.dropdownMenuEdit           = document.getElementById( "pd-menu-dropdown-item-edit" );
-        this.dropdownMenuDelete         = document.getElementById( "pd-menu-dropdown-item-delete" );
+        this.dropdownMenuBackground     = document.getElementById( "listing-menu-dropdown-background" );
+        this.dropdownMenu               = document.getElementById( "listing-menu-dropdown" );
+        this.dropdownMenuEdit           = document.getElementById( "listing-menu-dropdown-item-edit" );
+        this.dropdownMenuDelete         = document.getElementById( "listing-menu-dropdown-item-delete" );
 
 
         this.modalBackgroundListener            = this.modalBackgroundListener.bind( this );

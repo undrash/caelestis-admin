@@ -3,17 +3,19 @@ import {Promise} from 'es6-promise'
 
 import { ViewComponent } from "../core/ViewComponent";
 import { View } from "../core/View";
-
-// CSS
-import "../_style/style-sheets/object-types.scss";
 import {PropertyDefinitionDatatypes} from "../property-definitions/PropertyDefinitionDatatypes";
 import {IPropertyDefinition} from "../connection/models/IPropertyDefinition";
 import {PropertyDefinition} from "../connection/models/PropertyDefinition";
+
+// CSS
+import "../_style/style-sheets/object-types.scss";
+import "../_style/style-sheets/listing-menu-dropdown.scss";
 
 // HTML
 const newOTModalTemplate = require("../_view-templates/object-types-new-object-type-modal.html");
 const addPDModalTemplate = require("../_view-templates/object-types-add-properties-modal.html");
 const newPDModalTemplate = require("../_view-templates/property-definitions-add-modal.html");
+const dropDownMenuTemplate = require("../_view-templates/listing-menu-dropdown.html");
 const template = require("../_view-templates/object-types.html" );
 
 export class ObjectTypes extends ViewComponent {
@@ -46,6 +48,13 @@ export class ObjectTypes extends ViewComponent {
     private modalNewPDCancelBtn: HTMLButtonElement;
     private modalNewPDOKBtn: HTMLButtonElement;
 
+
+    private dropdownMenuBackground: HTMLElement;
+    private dropdownMenu: HTMLElement;
+    private dropdownMenuEdit: HTMLElement;
+    private dropdownMenuDelete: HTMLElement;
+
+    private activeObjectType: string;
 
     private availableProperties: any[];
     private selectedProperties: any[];
@@ -102,6 +111,14 @@ export class ObjectTypes extends ViewComponent {
         this.modalNewPDOKBtn                = document.getElementById( "pd-modal-add-ok" ) as HTMLButtonElement;
 
 
+        this.container.insertAdjacentHTML( "beforeend", dropDownMenuTemplate );
+
+        this.dropdownMenuBackground     = document.getElementById( "listing-menu-dropdown-background" );
+        this.dropdownMenu               = document.getElementById( "listing-menu-dropdown" );
+        this.dropdownMenuEdit           = document.getElementById( "listing-menu-dropdown-item-edit" );
+        this.dropdownMenuDelete         = document.getElementById( "listing-menu-dropdown-item-delete" );
+
+
 
         this.modalBackgroundListener            = this.modalBackgroundListener.bind( this );
         this.modalOTaddBtnListener              = this.modalOTaddBtnListener.bind( this );
@@ -116,6 +133,10 @@ export class ObjectTypes extends ViewComponent {
         this.modalEditPDOKBtnListener           = this.modalEditPDOKBtnListener.bind( this );
         this.modalOTPropertySelectionListener   = this.modalOTPropertySelectionListener.bind( this );
         this.modalOTSetNameBtnListener          = this.modalOTSetNameBtnListener.bind( this );
+        this.dropdownMenuBackgroundListener     = this.dropdownMenuBackgroundListener.bind( this );
+        this.dropDownMenuEditListener           = this.dropDownMenuEditListener.bind( this );
+        this.dropDownMenuDeleteListener         = this.dropDownMenuDeleteListener.bind( this );
+        this.propertyDefItemMousedownListener   = this.propertyDefItemMousedownListener.bind( this );
 
 
         this.enterScene();
@@ -137,6 +158,9 @@ export class ObjectTypes extends ViewComponent {
         this.modalNewPDOKBtn.addEventListener( "click", this.modalNewPDOKBtnListener );
         this.modalSelectPDOKBtn.addEventListener( "click", this.modalEditPDOKBtnListener );
         this.modalOTSetNameBtn.addEventListener( "click", this.modalOTSetNameBtnListener );
+        this.dropdownMenuBackground.addEventListener( "click", this.dropdownMenuBackgroundListener );
+        this.dropdownMenuEdit.addEventListener( "click", this.dropDownMenuEditListener );
+        this.dropdownMenuDelete.addEventListener( "click", this.dropDownMenuDeleteListener );
 
 
     }
@@ -157,6 +181,9 @@ export class ObjectTypes extends ViewComponent {
         this.modalNewPDOKBtn.removeEventListener( "click", this.modalNewPDOKBtnListener );
         this.modalSelectPDOKBtn.removeEventListener( "click", this.modalEditPDOKBtnListener );
         this.modalOTSetNameBtn.removeEventListener( "click", this.modalOTSetNameBtnListener );
+        this.dropdownMenuBackground.removeEventListener( "click", this.dropdownMenuBackgroundListener );
+        this.dropdownMenuEdit.removeEventListener( "click", this.dropDownMenuEditListener );
+        this.dropdownMenuDelete.removeEventListener( "click", this.dropDownMenuDeleteListener );
 
 
     }
@@ -477,6 +504,7 @@ export class ObjectTypes extends ViewComponent {
 
                         this.objectTypesContainer.appendChild( otItem );
 
+                        otItem.addEventListener( "mousedown", this.propertyDefItemMousedownListener );
 
                     })
                     .catch( (err: any) => {
@@ -508,6 +536,7 @@ export class ObjectTypes extends ViewComponent {
         }
 
     }
+
 
 
     private modalOTSetNameBtnListener(e: any): void {
@@ -542,6 +571,37 @@ export class ObjectTypes extends ViewComponent {
         checkbox.disabled = true;
 
 
+    }
+
+
+
+    private dropdownMenuBackgroundListener(e: any): void {
+        if ( e.target.id == this.dropdownMenuBackground.id ) this.dropdownMenuBackground.style.display = "none";
+    }
+
+
+
+    private dropDownMenuEditListener(e: any): void {
+        console.info( "edit clicked" );
+        this.dropdownMenuBackground.style.display = "none";
+    }
+
+
+
+    private dropDownMenuDeleteListener(e: any): void {
+        console.info( "delete clicked" );
+        this.dropdownMenuBackground.style.display = "none";
+    }
+
+
+    private propertyDefItemMousedownListener(e: any): void {
+        if ( e.which === 3 ) {
+            this.dropdownMenu.style.top = e.pageY + "px";
+            this.dropdownMenu.style.left = e.pageX + "px";
+
+            this.activeObjectType = e.target.id;
+            this.dropdownMenuBackground.style.display = "block";
+        }
     }
 
 
@@ -632,6 +692,8 @@ export class ObjectTypes extends ViewComponent {
                     otItem.appendChild( propDefType );
 
                     this.objectTypesContainer.appendChild( otItem );
+
+                    otItem.addEventListener( "mousedown", this.propertyDefItemMousedownListener );
                 }
 
             },
