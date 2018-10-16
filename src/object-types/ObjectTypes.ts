@@ -136,7 +136,7 @@ export class ObjectTypes extends ViewComponent {
         this.dropdownMenuBackgroundListener     = this.dropdownMenuBackgroundListener.bind( this );
         this.dropDownMenuEditListener           = this.dropDownMenuEditListener.bind( this );
         this.dropDownMenuDeleteListener         = this.dropDownMenuDeleteListener.bind( this );
-        this.propertyDefItemMousedownListener   = this.propertyDefItemMousedownListener.bind( this );
+        this.objectTypeItemMousedownListener   = this.objectTypeItemMousedownListener.bind( this );
 
 
         this.enterScene();
@@ -504,7 +504,7 @@ export class ObjectTypes extends ViewComponent {
 
                         this.objectTypesContainer.appendChild( otItem );
 
-                        otItem.addEventListener( "mousedown", this.propertyDefItemMousedownListener );
+                        otItem.addEventListener( "mousedown", this.objectTypeItemMousedownListener );
 
                     })
                     .catch( (err: any) => {
@@ -594,7 +594,7 @@ export class ObjectTypes extends ViewComponent {
     }
 
 
-    private propertyDefItemMousedownListener(e: any): void {
+    private objectTypeItemMousedownListener(e: any): void {
         if ( e.which === 3 ) {
             this.dropdownMenu.style.top = e.pageY + "px";
             this.dropdownMenu.style.left = e.pageX + "px";
@@ -693,7 +693,7 @@ export class ObjectTypes extends ViewComponent {
 
                     this.objectTypesContainer.appendChild( otItem );
 
-                    otItem.addEventListener( "mousedown", this.propertyDefItemMousedownListener );
+                    otItem.addEventListener( "mousedown", this.objectTypeItemMousedownListener );
                 }
 
             },

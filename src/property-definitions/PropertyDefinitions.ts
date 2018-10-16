@@ -40,6 +40,8 @@ export class PropertyDefinitions extends ViewComponent {
 
     private activePropertyDef: string;
 
+    private editPropertyDefNameInput: HTMLInputElement;
+
     constructor(view: View, container: HTMLElement) {
         super( view, container );
 
@@ -74,16 +76,19 @@ export class PropertyDefinitions extends ViewComponent {
         this.dropdownMenuEdit           = document.getElementById( "listing-menu-dropdown-item-edit" );
         this.dropdownMenuDelete         = document.getElementById( "listing-menu-dropdown-item-delete" );
 
+        this.editPropertyDefNameInput   = document.createElement( "input" );
+        this.editPropertyDefNameInput.className = "property-definition-item-edit-name-input";
 
-        this.modalBackgroundListener            = this.modalBackgroundListener.bind( this );
-        this.cancelBtnListener                  = this.cancelBtnListener.bind( this );
-        this.addBtnListener                     = this.addBtnListener.bind( this );
-        this.okBtnListener                      = this.okBtnListener.bind( this );
-        this.dataTypeChangeListener             = this.dataTypeChangeListener.bind( this );
-        this.propertyDefItemMousedownListener   = this.propertyDefItemMousedownListener.bind( this );
-        this.dropdownMenuBackgroundListener     = this.dropdownMenuBackgroundListener.bind( this );
-        this.dropDownMenuEditListener           = this.dropDownMenuEditListener.bind( this );
-        this.dropDownMenuDeleteListener         = this.dropDownMenuDeleteListener.bind( this );
+        this.modalBackgroundListener                = this.modalBackgroundListener.bind( this );
+        this.cancelBtnListener                      = this.cancelBtnListener.bind( this );
+        this.addBtnListener                         = this.addBtnListener.bind( this );
+        this.okBtnListener                          = this.okBtnListener.bind( this );
+        this.dataTypeChangeListener                 = this.dataTypeChangeListener.bind( this );
+        this.propertyDefItemMousedownListener       = this.propertyDefItemMousedownListener.bind( this );
+        this.dropdownMenuBackgroundListener         = this.dropdownMenuBackgroundListener.bind( this );
+        this.dropDownMenuEditListener               = this.dropDownMenuEditListener.bind( this );
+        this.dropDownMenuDeleteListener             = this.dropDownMenuDeleteListener.bind( this );
+        this.editPropertyDefNameInputBlurListener   = this.editPropertyDefNameInputBlurListener.bind( this );
 
 
         this.enterScene();
@@ -101,6 +106,7 @@ export class PropertyDefinitions extends ViewComponent {
         this.dropdownMenuBackground.addEventListener( "click", this.dropdownMenuBackgroundListener );
         this.dropdownMenuEdit.addEventListener( "click", this.dropDownMenuEditListener );
         this.dropdownMenuDelete.addEventListener( "click", this.dropDownMenuDeleteListener );
+        this.editPropertyDefNameInput.addEventListener( "blur", this.editPropertyDefNameInputBlurListener );
 
 
 
@@ -111,13 +117,14 @@ export class PropertyDefinitions extends ViewComponent {
     private unregisterEventListeners(): void {
 
         this.addBtn.removeEventListener( "click", this.addBtnListener );
-        this.modalOKBtn.addEventListener( "click", this.okBtnListener );
+        this.modalOKBtn.removeEventListener( "click", this.okBtnListener );
         this.modalCancelBtn.removeEventListener( "click", this.cancelBtnListener );
         this.modalBackground.removeEventListener( "click", this.modalBackgroundListener );
         this.modalPropDataType.removeEventListener( "change", this.dataTypeChangeListener );
         this.dropdownMenuBackground.removeEventListener( "click", this.dropdownMenuBackgroundListener );
         this.dropdownMenuEdit.removeEventListener( "click", this.dropDownMenuEditListener );
         this.dropdownMenuDelete.removeEventListener( "click", this.dropDownMenuDeleteListener );
+        this.editPropertyDefNameInput.removeEventListener( "blur", this.editPropertyDefNameInputBlurListener );
 
     }
 
@@ -141,6 +148,7 @@ export class PropertyDefinitions extends ViewComponent {
     }
 
 
+
     private propertyDefItemMousedownListener(e: any): void {
         if ( e.which === 3 ) {
             this.dropdownMenu.style.top = e.pageY + "px";
@@ -150,6 +158,7 @@ export class PropertyDefinitions extends ViewComponent {
             this.dropdownMenuBackground.style.display = "block";
         }
     }
+
 
 
     private hideNewPropDefModal(): void {
@@ -264,15 +273,36 @@ export class PropertyDefinitions extends ViewComponent {
     }
 
 
+
     private dropDownMenuEditListener(e: any): void {
         console.info( "edit clicked" );
         this.dropdownMenuBackground.style.display = "none";
+        const listItem = document.getElementById( this.activePropertyDef );
+
+        const title: HTMLElement = listItem.getElementsByClassName( "property-definition-item-title" )[0] as HTMLElement;
+        title.style.display = "none";
+
+        listItem.appendChild( this.editPropertyDefNameInput );
+        this.editPropertyDefNameInput.value = title.innerHTML;
+        this.editPropertyDefNameInput.focus();
+
     }
 
 
     private dropDownMenuDeleteListener(e: any): void {
         console.info( "delete clicked" );
         this.dropdownMenuBackground.style.display = "none";
+    }
+
+
+    private editPropertyDefNameInputBlurListener(e: any): void {
+
+        const title: HTMLElement = this.editPropertyDefNameInput.parentElement.getElementsByClassName( "property-definition-item-title" )[0] as HTMLElement;
+        title.style.display = "block";
+
+        this.editPropertyDefNameInput.value = "";
+        this.editPropertyDefNameInput.parentElement.removeChild( this.editPropertyDefNameInput );
+
     }
 
 

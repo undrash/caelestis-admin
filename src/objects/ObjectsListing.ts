@@ -2,14 +2,16 @@
 
 import {ViewComponent} from "../core/ViewComponent";
 import {View} from "../core/View";
+import {ObjectNotifications} from "./ObjectNotifications";
+
+// CSS
+import "../_style/style-sheets/objects-listing.scss";
 
 
 // HTML
 const template = require("../_view-templates/objects-listing.html");
+const dropDownMenuTemplate = require("../_view-templates/listing-menu-dropdown.html");
 
-// CSS
-import "../_style/style-sheets/objects-listing.scss";
-import {ObjectNotifications} from "./ObjectNotifications";
 
 
 export class ObjectsListing extends ViewComponent {
@@ -17,6 +19,12 @@ export class ObjectsListing extends ViewComponent {
     private objectsContainer: HTMLElement;
     private addBtn: HTMLButtonElement;
 
+    private dropdownMenuBackground: HTMLElement;
+    private dropdownMenu: HTMLElement;
+    private dropdownMenuEdit: HTMLElement;
+    private dropdownMenuDelete: HTMLElement;
+
+    private activeObject: string;
 
     constructor(view: View, container: HTMLElement) {
         super( view, container );
@@ -24,13 +32,24 @@ export class ObjectsListing extends ViewComponent {
 
         this.container.innerHTML = template;
 
-        this.objectsContainer = document.getElementById( "object-listing-objects-container" );
-        this.addBtn = document.getElementById( "object-listing-add-btn" ) as HTMLButtonElement;
+        this.objectsContainer           = document.getElementById( "object-listing-objects-container" );
+        this.addBtn                      = document.getElementById( "object-listing-add-btn" ) as HTMLButtonElement;
+
+
+        this.container.insertAdjacentHTML( "beforeend", dropDownMenuTemplate );
+
+        this.dropdownMenuBackground     = document.getElementById( "listing-menu-dropdown-background" );
+        this.dropdownMenu               = document.getElementById( "listing-menu-dropdown" );
+        this.dropdownMenuEdit           = document.getElementById( "listing-menu-dropdown-item-edit" );
+        this.dropdownMenuDelete         = document.getElementById( "listing-menu-dropdown-item-delete" );
 
 
 
-        this.addBtnEventListener = this.addBtnEventListener.bind( this );
-
+        this.addBtnEventListener                = this.addBtnEventListener.bind( this );
+        this.objectItemMousedownListener        = this.objectItemMousedownListener.bind( this );
+        this.dropdownMenuBackgroundListener     = this.dropdownMenuBackgroundListener.bind( this );
+        this.dropDownMenuEditListener           = this.dropDownMenuEditListener.bind( this );
+        this.dropDownMenuDeleteListener         = this.dropDownMenuDeleteListener.bind( this );
 
         this.enterScene();
     }
@@ -40,13 +59,18 @@ export class ObjectsListing extends ViewComponent {
     private registerEventListeners(): void {
 
         this.addBtn.addEventListener( "click", this.addBtnEventListener );
-
+        this.dropdownMenuBackground.addEventListener( "click", this.dropdownMenuBackgroundListener );
+        this.dropdownMenuEdit.addEventListener( "click", this.dropDownMenuEditListener );
+        this.dropdownMenuDelete.addEventListener( "click", this.dropDownMenuDeleteListener );
     }
 
 
     private unregisterEventListeners(): void {
 
         this.addBtn.removeEventListener( "click", this.addBtnEventListener );
+        this.dropdownMenuBackground.removeEventListener( "click", this.dropdownMenuBackgroundListener );
+        this.dropdownMenuEdit.removeEventListener( "click", this.dropDownMenuEditListener );
+        this.dropdownMenuDelete.removeEventListener( "click", this.dropDownMenuDeleteListener );
 
     }
 
@@ -55,6 +79,36 @@ export class ObjectsListing extends ViewComponent {
     private addBtnEventListener(e: any): void {
         this.sendSignal( ObjectNotifications.OBJECTS_LISTING_ADD_BTN_CLICKED );
     }
+
+
+    private objectItemMousedownListener(e: any): void {
+        if ( e.which === 3 ) {
+            this.dropdownMenu.style.top = e.pageY + "px";
+            this.dropdownMenu.style.left = e.pageX + "px";
+
+            this.activeObject = e.target.id;
+            this.dropdownMenuBackground.style.display = "block";
+        }
+    }
+
+
+    private dropdownMenuBackgroundListener(e: any): void {
+        if ( e.target.id == this.dropdownMenuBackground.id ) this.dropdownMenuBackground.style.display = "none";
+    }
+
+
+    private dropDownMenuEditListener(e: any): void {
+        console.info( "edit clicked" );
+        this.dropdownMenuBackground.style.display = "none";
+    }
+
+
+    private dropDownMenuDeleteListener(e: any): void {
+        console.info( "delete clicked" );
+        this.dropdownMenuBackground.style.display = "none";
+    }
+
+
 
 
     public enterScene(): void {
@@ -131,6 +185,9 @@ export class ObjectsListing extends ViewComponent {
         objItem.appendChild( objType );
 
         this.objectsContainer.appendChild( objItem );
+
+
+        objItem.addEventListener( "mousedown", this.objectItemMousedownListener );
 
         this.connection.getObjectTypeById(
             object.type,
