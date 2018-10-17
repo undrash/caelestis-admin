@@ -164,7 +164,7 @@ export class ObjectsListing extends ViewComponent {
 
         for ( let j = 0; j < object.properties.length; j++ ) {
 
-            if ( object.properties[j].propertyDef === object.nameProperty ) {
+            if ( object.properties[j].propertyDef._id === object.type.nameProperty ) {
 
                 objName.innerHTML = object.properties[j].value;
                 break;
@@ -175,7 +175,7 @@ export class ObjectsListing extends ViewComponent {
 
         let objType = document.createElement( "span" );
         objType.className = "object-item-type";
-        objType.innerHTML = object.typeName;
+        objType.innerHTML = object.type.name;
 
         let objProperties = document.createElement( "span" );
         objProperties.className = "object-item-properties";
