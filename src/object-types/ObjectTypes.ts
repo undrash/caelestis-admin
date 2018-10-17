@@ -61,6 +61,8 @@ export class ObjectTypes extends ViewComponent {
 
     private objectTypeNameProperty: string;
 
+    private editMode: boolean;
+
 
 
     constructor(view: View, container: HTMLElement) {
@@ -69,6 +71,7 @@ export class ObjectTypes extends ViewComponent {
         this.availableProperties = [];
         this.selectedProperties = [];
         this.objectTypeNameProperty = null;
+        this.editMode = false;
 
 
         this.container.innerHTML = template;
@@ -136,7 +139,7 @@ export class ObjectTypes extends ViewComponent {
         this.dropdownMenuBackgroundListener     = this.dropdownMenuBackgroundListener.bind( this );
         this.dropDownMenuEditListener           = this.dropDownMenuEditListener.bind( this );
         this.dropDownMenuDeleteListener         = this.dropDownMenuDeleteListener.bind( this );
-        this.objectTypeItemMousedownListener   = this.objectTypeItemMousedownListener.bind( this );
+        this.objectTypeItemMousedownListener    = this.objectTypeItemMousedownListener.bind( this );
 
 
         this.enterScene();
@@ -192,6 +195,8 @@ export class ObjectTypes extends ViewComponent {
 
     private modalOTaddBtnListener(e: any): void {
         this.modalBackground.style.display = "block";
+        this.modalOTOKBtn.innerHTML = "CREATE";
+        this.editMode = false;
     }
 
 
@@ -392,7 +397,7 @@ export class ObjectTypes extends ViewComponent {
             propDefRequiredCheckbox.type = "checkbox";
             propDefRequiredCheckbox.className = "ot-modal-property-required-checkbox";
 
-            if( property.required ) propDefRequiredCheckbox.checked = true;
+            if ( property.required ) propDefRequiredCheckbox.checked = true;
 
             propDefItem.appendChild( propDefName );
             propDefItem.appendChild( propDefRequiredCheckbox );
@@ -435,6 +440,7 @@ export class ObjectTypes extends ViewComponent {
 
         const propertyDefs = this.selectedProperties.map( p => p._id );
         const requiredPropertyDefs = this.selectedProperties.filter( p => p.required === true ).map( p => p._id );
+        const notRequiredPropertyDefs = this.selectedProperties.filter( p => p.required === false ).map( p => p._id );
         const name = this.modalOTNameInput.value;
         const nameProperty = this.objectTypeNameProperty;
 
@@ -443,79 +449,88 @@ export class ObjectTypes extends ViewComponent {
         this.modalOTNameInput.value = "";
         this.modalOTPropertiesContainer.innerHTML = "";
 
-        this.connection.createObjectType(
-            {
-                name,
-                nameProperty,
-                propertyDefs
-            },
-            (response: any) => {
-                const { objectType } = response;
+        if ( ! this.editMode ) {
+            this.connection.createObjectType(
+                {
+                    name,
+                    nameProperty,
+                    propertyDefs
+                },
+                (response: any) => {
+                    const { objectType } = response;
 
-                console.info( "object type cooked: " + objectType );
+                    console.info( "object type cooked: " + objectType );
 
-                let promises = [];
+                    let promises = [];
 
-                for ( let i = 0; i < requiredPropertyDefs.length; i++ ) {
+                    for ( let i = 0; i < requiredPropertyDefs.length; i++ ) {
 
-                    let p = new Promise( (resolve: Function, reject: Function) => {
-                        this.connection.setPropertyDefinitionRequired(
-                            {
-                                objectType: objectType._id,
-                                propertyDef: requiredPropertyDefs[i],
-                            },
-                            (response: any) => {
+                        let p = new Promise( (resolve: Function, reject: Function) => {
+                            this.connection.setPropertyDefinitionRequired(
+                                {
+                                    objectType: objectType._id,
+                                    propertyDef: requiredPropertyDefs[i],
+                                    required: true
+                                },
+                                (response: any) => {
 
-                                console.log( "property def required update success for " + requiredPropertyDefs[i] );
+                                    console.log( "property def required update success for " + requiredPropertyDefs[i] );
 
-                                resolve( response );
-                            },
-                            (message: string) => {
-                                reject( message );
-                            }
-                        )
-                    });
+                                    resolve( response );
+                                },
+                                (message: string) => {
+                                    reject( message );
+                                }
+                            )
+                        });
 
 
-                    promises.push( p );
+                        promises.push( p );
+                    }
+
+                    Promise.all( promises )
+                        .then( (result: any) => {
+
+                            console.info( "all promises fulfilled!!" );
+
+                            let otItem = document.createElement( "div" );
+                            otItem.id = objectType._id;
+                            otItem.className = "object-type-item";
+
+
+                            let propDefTitle = document.createElement( "p" );
+                            propDefTitle.className = "object-type-item-title";
+                            propDefTitle.innerHTML = objectType.name;
+
+                            let propDefType = document.createElement( "p" );
+                            propDefType.className = "object-type-item-properties";
+                            propDefType.innerHTML = objectType.properties.length;
+
+
+                            otItem.appendChild( propDefTitle );
+                            otItem.appendChild( propDefType );
+
+                            this.objectTypesContainer.appendChild( otItem );
+
+                            otItem.addEventListener( "mousedown", this.objectTypeItemMousedownListener );
+
+                        })
+                        .catch( (err: any) => {
+                            console.warn( err );
+                        });
+
+                },
+                (message: string) => {
+                    console.warn( message );
                 }
-
-                Promise.all( promises )
-                    .then( (result: any) => {
-
-                        console.info( "all promises fulfilled!!" );
-
-                        let otItem = document.createElement( "div" );
-                        otItem.id = objectType._id;
-                        otItem.className = "object-type-item";
+            );
+        } else {
 
 
-                        let propDefTitle = document.createElement( "p" );
-                        propDefTitle.className = "object-type-item-title";
-                        propDefTitle.innerHTML = objectType.name;
-
-                        let propDefType = document.createElement( "p" );
-                        propDefType.className = "object-type-item-properties";
-                        propDefType.innerHTML = objectType.properties.length;
 
 
-                        otItem.appendChild( propDefTitle );
-                        otItem.appendChild( propDefType );
 
-                        this.objectTypesContainer.appendChild( otItem );
-
-                        otItem.addEventListener( "mousedown", this.objectTypeItemMousedownListener );
-
-                    })
-                    .catch( (err: any) => {
-                        console.warn( err );
-                    });
-
-            },
-            (message: string) => {
-                console.warn( message );
-            }
-        )
+        }
     }
 
 
@@ -582,8 +597,87 @@ export class ObjectTypes extends ViewComponent {
 
 
     private dropDownMenuEditListener(e: any): void {
+
+        this.editMode = true;
+
         console.info( "edit clicked" );
         this.dropdownMenuBackground.style.display = "none";
+        this.modalBackground.style.display = "block";
+        this.modalOTOKBtn.innerHTML = "SAVE";
+
+        this.modalOTNameInput.value = "";
+        this.modalOTPropertiesContainer.innerHTML = "";
+
+        this.connection.getObjectTypeById(
+            this.activeObjectType,
+            (response: any) => {
+                const { objectType } = response;
+
+                this.modalOTNameInput.value = objectType.name;
+                this.selectedProperties = objectType.properties;
+
+                for ( let property of objectType.properties ) {
+
+                    let propDefItem = document.createElement( "li" );
+                    propDefItem.id = property._id;
+                    propDefItem.className = "ot-modal-property";
+
+                    let propDefName = document.createElement( "span" );
+                    propDefName.className = "ot-modal-property-name";
+                    propDefName.innerHTML = property.name;
+
+                    let propDefDataType = document.createElement( "span" );
+                    propDefDataType.className = "ot-modal-property-data-type";
+                    propDefDataType.innerHTML = this.parseDataType( property.dataType );
+
+
+                    let propDefRequiredCheckbox = document.createElement( "input" );
+                    propDefRequiredCheckbox.id = property._id + "-checkbox-required";
+                    propDefRequiredCheckbox.type = "checkbox";
+                    propDefRequiredCheckbox.className = "ot-modal-property-required-checkbox";
+
+                    if ( property.required ) propDefRequiredCheckbox.checked = true;
+
+                    if ( objectType.nameProperty === property._id ) {
+                        propDefRequiredCheckbox.checked = true;
+                        propDefRequiredCheckbox.disabled = true;
+                    }
+
+                    propDefItem.appendChild( propDefName );
+                    propDefItem.appendChild( propDefRequiredCheckbox );
+                    propDefItem.appendChild( propDefDataType );
+
+                    this.modalOTPropertiesContainer.appendChild( propDefItem );
+
+                    propDefItem.addEventListener( "click", this.modalOTPropertySelectionListener );
+
+
+                    propDefRequiredCheckbox.addEventListener( "change", (e: any) => {
+
+                        const id = e.target.parentElement.id;
+
+                        for ( let i = 0; i < this.selectedProperties.length; i++ ) {
+
+                            if ( this.selectedProperties[i]._id === id ) {
+
+                                this.selectedProperties[i].required = e.target.checked;
+
+                                break;
+                            }
+
+                        }
+
+                    });
+
+
+                }
+            },
+            (message: string) => {
+                console.warn( message );
+            }
+
+        )
+
     }
 
 
@@ -592,6 +686,7 @@ export class ObjectTypes extends ViewComponent {
         console.info( "delete clicked" );
         this.dropdownMenuBackground.style.display = "none";
     }
+
 
 
     private objectTypeItemMousedownListener(e: any): void {
@@ -635,13 +730,14 @@ export class ObjectTypes extends ViewComponent {
 
     private hideModals(): void {
         this.modalBackground.style.display  = "none";
-        this.modalSelectPD.style.display      = "none";
+        this.modalSelectPD.style.display    = "none";
         this.modalNewPD.style.display       = "none";
         this.modalOT.style.display          = "block";
 
 
-        this.modalOTPropertiesContainer.innerHTML = "";
-        this.modalSelectPDPropertyContainer.innerHTML = "";
+        this.modalOTPropertiesContainer.innerHTML       = "";
+        this.modalSelectPDPropertyContainer.innerHTML   = "";
+        this.modalOTNameInput.value                     = "";
 
     }
 
@@ -714,7 +810,11 @@ export class ObjectTypes extends ViewComponent {
 
                 this.availableProperties = properties;
 
+                const currentPropSelection: string[] = this.selectedProperties.map( p => p._id );
+
                 for ( let i = 0; i < properties.length; i++ ) {
+
+                    if ( currentPropSelection.indexOf( properties[i]._id ) > -1 ) continue;
 
                     let property = document.createElement( "li" );
                     property.id = properties[i]._id;

@@ -122,6 +122,14 @@ export class ConnectionProxy extends CoreEntity {
     }
 
 
+    public editObjectType(data: any, success: Function, failure: Function): void {
+
+
+
+
+    }
+
+
 
     public getObjects(success: Function, failure: Function): void {
 
