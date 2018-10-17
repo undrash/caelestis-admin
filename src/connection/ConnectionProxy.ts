@@ -122,9 +122,16 @@ export class ConnectionProxy extends CoreEntity {
     }
 
 
+
     public editObjectType(data: any, success: Function, failure: Function): void {
 
-
+        this.httpRequest(
+            "PUT",
+            "/api/v1/object-types/",
+            data,
+            success,
+            failure
+        );
 
 
     }

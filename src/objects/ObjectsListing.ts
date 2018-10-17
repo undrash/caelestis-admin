@@ -175,6 +175,7 @@ export class ObjectsListing extends ViewComponent {
 
         let objType = document.createElement( "span" );
         objType.className = "object-item-type";
+        objType.innerHTML = object.typeName;
 
         let objProperties = document.createElement( "span" );
         objProperties.className = "object-item-properties";
@@ -188,19 +189,6 @@ export class ObjectsListing extends ViewComponent {
 
 
         objItem.addEventListener( "mousedown", this.objectItemMousedownListener );
-
-        this.connection.getObjectTypeById(
-            object.type,
-            (response: any) => {
-
-                const { objectType } = response;
-                objType.innerHTML = objectType.name;
-
-            },
-            (message: string) => {
-                console.warn( message );
-            }
-        )
 
     }
 

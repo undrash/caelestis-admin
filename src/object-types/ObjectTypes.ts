@@ -54,7 +54,7 @@ export class ObjectTypes extends ViewComponent {
     private dropdownMenuEdit: HTMLElement;
     private dropdownMenuDelete: HTMLElement;
 
-    private activeObjectType: string;
+    private activeObjectTypeId: string;
 
     private availableProperties: any[];
     private selectedProperties: any[];
@@ -438,98 +438,58 @@ export class ObjectTypes extends ViewComponent {
 
     private modalOTOKBtnListener(): void {
 
-        const propertyDefs = this.selectedProperties.map( p => p._id );
-        const requiredPropertyDefs = this.selectedProperties.filter( p => p.required === true ).map( p => p._id );
-        const notRequiredPropertyDefs = this.selectedProperties.filter( p => p.required === false ).map( p => p._id );
+        const id = this.activeObjectTypeId;
         const name = this.modalOTNameInput.value;
         const nameProperty = this.objectTypeNameProperty;
 
+        const properties = [];
+
+        for ( let prop of this.selectedProperties ) {
+            properties.push( { id: prop._id, required: prop.required } );
+        }
 
         this.modalBackground.style.display = "none";
         this.modalOTNameInput.value = "";
         this.modalOTPropertiesContainer.innerHTML = "";
 
         if ( ! this.editMode ) {
+
             this.connection.createObjectType(
                 {
                     name,
                     nameProperty,
-                    propertyDefs
+                    properties
                 },
                 (response: any) => {
                     const { objectType } = response;
 
-                    console.info( "object type cooked: " + objectType );
+                    this.createListItemFromObjectType( objectType );
 
-                    let promises = [];
+                },
+                (message: string) => {
+                    console.warn( message );
+                });
 
-                    for ( let i = 0; i < requiredPropertyDefs.length; i++ ) {
+        } else {
 
-                        let p = new Promise( (resolve: Function, reject: Function) => {
-                            this.connection.setPropertyDefinitionRequired(
-                                {
-                                    objectType: objectType._id,
-                                    propertyDef: requiredPropertyDefs[i],
-                                    required: true
-                                },
-                                (response: any) => {
+            this.connection.editObjectType(
+                {
+                    id,
+                    name,
+                    nameProperty,
+                    properties
+                },
+                (response: any) => {
 
-                                    console.log( "property def required update success for " + requiredPropertyDefs[i] );
+                    const { objectType } = response;
 
-                                    resolve( response );
-                                },
-                                (message: string) => {
-                                    reject( message );
-                                }
-                            )
-                        });
-
-
-                        promises.push( p );
-                    }
-
-                    Promise.all( promises )
-                        .then( (result: any) => {
-
-                            console.info( "all promises fulfilled!!" );
-
-                            let otItem = document.createElement( "div" );
-                            otItem.id = objectType._id;
-                            otItem.className = "object-type-item";
-
-
-                            let propDefTitle = document.createElement( "p" );
-                            propDefTitle.className = "object-type-item-title";
-                            propDefTitle.innerHTML = objectType.name;
-
-                            let propDefType = document.createElement( "p" );
-                            propDefType.className = "object-type-item-properties";
-                            propDefType.innerHTML = objectType.properties.length;
-
-
-                            otItem.appendChild( propDefTitle );
-                            otItem.appendChild( propDefType );
-
-                            this.objectTypesContainer.appendChild( otItem );
-
-                            otItem.addEventListener( "mousedown", this.objectTypeItemMousedownListener );
-
-                        })
-                        .catch( (err: any) => {
-                            console.warn( err );
-                        });
+                    this.createListItemFromObjectType( objectType );
 
                 },
                 (message: string) => {
                     console.warn( message );
                 }
-            );
-        } else {
-
-
-
-
-
+            )
         }
     }
 
@@ -609,7 +569,7 @@ export class ObjectTypes extends ViewComponent {
         this.modalOTPropertiesContainer.innerHTML = "";
 
         this.connection.getObjectTypeById(
-            this.activeObjectType,
+            this.activeObjectTypeId,
             (response: any) => {
                 const { objectType } = response;
 
@@ -694,9 +654,34 @@ export class ObjectTypes extends ViewComponent {
             this.dropdownMenu.style.top = e.pageY + "px";
             this.dropdownMenu.style.left = e.pageX + "px";
 
-            this.activeObjectType = e.target.id;
+            this.activeObjectTypeId = e.target.id;
             this.dropdownMenuBackground.style.display = "block";
         }
+    }
+
+
+
+    private createListItemFromObjectType(objectType: any): void {
+        let otItem = document.createElement( "div" );
+        otItem.id = objectType._id;
+        otItem.className = "object-type-item";
+
+
+        let propDefTitle = document.createElement( "p" );
+        propDefTitle.className = "object-type-item-title";
+        propDefTitle.innerHTML = objectType.name;
+
+        let propDefType = document.createElement( "p" );
+        propDefType.className = "object-type-item-properties";
+        propDefType.innerHTML = objectType.properties.length;
+
+
+        otItem.appendChild( propDefTitle );
+        otItem.appendChild( propDefType );
+
+        this.objectTypesContainer.appendChild( otItem );
+
+        otItem.addEventListener( "mousedown", this.objectTypeItemMousedownListener );
     }
 
 
