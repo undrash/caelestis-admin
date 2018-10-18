@@ -213,12 +213,15 @@ export class ObjectCreateModal extends ViewComponent {
 
         const selectedObjectTypeId = this.objectTypeSelect.options[ this.objectTypeSelect.selectedIndex ].value;
 
+
         const selectedObjectType = this.objectTypes[ selectedObjectTypeId ];
 
         for ( let prop of selectedObjectType.properties ) {
 
+            console.log( prop );
+
             this.connection.getPropertyDefinitionById(
-                prop,
+                prop._id,
                 (response: any) => {
 
                     const { propertyDef } = response;
@@ -280,10 +283,13 @@ export class ObjectCreateModal extends ViewComponent {
 
                         for ( let object of objects ) {
 
+
+                            console.log( object );
+
                             let option = document.createElement( "option" );
                             option.value = object._id;
 
-                            const titleProp = object.properties.filter( (p: any) => p.propertyDef === object.nameProperty )[0];
+                            const titleProp = object.properties.filter( (p: any) => p.propertyDef._id === object.type.nameProperty )[0];
 
                             option.text = titleProp.value;
 

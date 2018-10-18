@@ -29,6 +29,7 @@ export class ConnectionProxy extends CoreEntity {
     }
 
 
+
     public getPropertyDefinitionById(id: string, success: Function, failure: Function): void {
         this.httpRequest(
             "GET",
@@ -38,7 +39,6 @@ export class ConnectionProxy extends CoreEntity {
             failure
         );
     }
-
 
 
 
@@ -81,6 +81,7 @@ export class ConnectionProxy extends CoreEntity {
     }
 
 
+
     public getObjectTypes(success: Function, failure: Function): void {
         console.info( "Proxy get object type executed." );
 
@@ -105,7 +106,6 @@ export class ConnectionProxy extends CoreEntity {
             failure
         );
     }
-
 
 
 
@@ -175,6 +175,7 @@ export class ConnectionProxy extends CoreEntity {
         )
 
     }
+
 
 
     private httpRequest(method: string, endpoint: string, data: any, success: Function, failure: Function): XMLHttpRequest {
