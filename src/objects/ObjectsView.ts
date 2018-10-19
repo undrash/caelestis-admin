@@ -194,6 +194,12 @@ export class ObjectsView extends View {
 
                 break;
 
+            case ObjectNotifications.OBJECTS_EDIT_OBJECT_EDITED :
+
+                ( this.objectsListing as ObjectsListing).createListItemFromObject( signal.data );
+
+                break;
+
             case ObjectNotifications.OBJECTS_CREATE_OBJECT_CREATED :
 
                 this.hideModals();

@@ -24,7 +24,7 @@ export class ObjectEditModal extends ViewComponent {
     private objectTypeName: HTMLElement;
     private propertiesContainer: HTMLElement;
     private cancelBtn: HTMLButtonElement;
-    private createBtn: HTMLButtonElement;
+    private saveBtn: HTMLButtonElement;
 
 
 
@@ -40,11 +40,11 @@ export class ObjectEditModal extends ViewComponent {
         this.objectTypeName         = document.getElementById( "objects-edit-modal-object-type" );
         this.propertiesContainer    = document.getElementById( "objects-edit-properties-container" );
         this.cancelBtn              = document.getElementById( "objects-edit-cancel-btn" ) as HTMLButtonElement;
-        this.createBtn              = document.getElementById( "objects-edit-create-btn" ) as HTMLButtonElement;
+        this.saveBtn              = document.getElementById( "objects-edit-create-btn" ) as HTMLButtonElement;
 
 
         this.cancelBtnListener              = this.cancelBtnListener.bind( this );
-        this.createBtnListener              = this.createBtnListener.bind( this );
+        this.saveBtnListener              = this.saveBtnListener.bind( this );
 
         this.enterScene();
     }
@@ -53,7 +53,7 @@ export class ObjectEditModal extends ViewComponent {
     private registerEventListeners(): void {
 
         this.cancelBtn.addEventListener( "click", this.cancelBtnListener );
-        this.createBtn.addEventListener( "click", this.createBtnListener );
+        this.saveBtn.addEventListener( "click", this.saveBtnListener );
 
 
     }
@@ -63,7 +63,7 @@ export class ObjectEditModal extends ViewComponent {
     private unregisterEventListeners(): void {
 
         this.cancelBtn.removeEventListener( "click", this.cancelBtnListener );
-        this.createBtn.removeEventListener( "click", this.createBtnListener );
+        this.saveBtn.removeEventListener( "click", this.saveBtnListener );
 
     }
 
@@ -75,7 +75,7 @@ export class ObjectEditModal extends ViewComponent {
 
 
 
-    private createBtnListener(e: any): void {
+    private saveBtnListener(e: any): void {
 
         this.sendSignal( ObjectNotifications.OBJECTS_EDIT_HIDE );
 
@@ -90,7 +90,7 @@ export class ObjectEditModal extends ViewComponent {
 
             properties.push(
                 {
-                    id: input.id,
+                    propertyDef: input.id,
                     value: input.value
                 }
             )
@@ -106,6 +106,8 @@ export class ObjectEditModal extends ViewComponent {
                 const { object } = response;
 
                 console.log( object );
+
+                this.sendSignal( ObjectNotifications.OBJECTS_EDIT_OBJECT_EDITED, object );
             },
             (message: string) => {
                 console.warn( message );
@@ -229,7 +231,7 @@ export class ObjectEditModal extends ViewComponent {
         }
 
         if ( propertyValue.value ) propValInput.value = propertyValue.value;
-        propValInput.id = propertyValue._id;
+        propValInput.id = propertyValue.propertyDef._id;
 
         propValContainer.appendChild( propValTitle );
         propValContainer.appendChild( propValInput );

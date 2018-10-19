@@ -160,6 +160,9 @@ export class ObjectsListing extends ViewComponent {
 
     public createListItemFromObject(object: any): void {
 
+        let prevItem = document.getElementById( object._id );
+
+        if ( prevItem ) prevItem.parentElement.removeChild( prevItem );
 
         let objItem = document.createElement( "div" );
         objItem.id = object._id;
