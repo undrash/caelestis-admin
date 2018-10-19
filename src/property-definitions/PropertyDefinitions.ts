@@ -1,4 +1,5 @@
 
+
 import { PropertyDefinitionDatatypes } from "./PropertyDefinitionDatatypes";
 import { IPropertyDefinition } from "../connection/models/IPropertyDefinition";
 import { PropertyDefinition } from "../connection/models/PropertyDefinition";
@@ -14,6 +15,7 @@ import "../_style/style-sheets/listing-menu-dropdown.scss";
 const modalTemplate = require("../_view-templates/property-definitions-add-modal.html");
 const template = require("../_view-templates/property-definitions.html");
 const dropDownMenuTemplate = require("../_view-templates/listing-menu-dropdown.html");
+
 
 
 
@@ -49,8 +51,8 @@ export class PropertyDefinitions extends ViewComponent {
         this.container.innerHTML = template;
 
 
-        this.propertyDefContainer = document.getElementById( "property-definitions-container" );
-        this.addBtn               = document.getElementById( "property-definitions-add-btn" ) as HTMLButtonElement;
+        this.propertyDefContainer       = document.getElementById( "property-definitions-container" );
+        this.addBtn                     = document.getElementById( "property-definitions-add-btn" ) as HTMLButtonElement;
 
         this.modalBackground            = document.createElement( "div" );
         this.modalBackground.id         = "property-definitions-modal-background";
@@ -78,6 +80,7 @@ export class PropertyDefinitions extends ViewComponent {
 
         this.editPropertyDefNameInput   = document.createElement( "input" );
         this.editPropertyDefNameInput.className = "property-definition-item-edit-name-input";
+
 
         this.modalBackgroundListener                    = this.modalBackgroundListener.bind( this );
         this.cancelBtnListener                          = this.cancelBtnListener.bind( this );

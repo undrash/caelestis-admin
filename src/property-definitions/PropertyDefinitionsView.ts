@@ -1,11 +1,11 @@
 
 
-import {INotification} from "../core/INotification";
-import {View} from "../core/View";
-import {ISignal} from "../core/ISignal";
-import {ViewComponent} from "../core/ViewComponent";
-import {SystemConstants} from "../core/SystemConstants";
-import {PropertyDefinitions} from "./PropertyDefinitions";
+import { PropertyDefinitions } from "./PropertyDefinitions";
+import { SystemConstants } from "../core/SystemConstants";
+import { INotification } from "../core/INotification";
+import { ViewComponent } from "../core/ViewComponent";
+import { ISignal } from "../core/ISignal";
+import { View } from "../core/View";
 
 
 
@@ -20,8 +20,8 @@ export class PropertyDefinitionsView extends View {
     constructor() {
         super( "PropertyDefinitionsView" );
 
-        this.container = document.createElement( "div" );
-        this.container.id = "property-definitions-view-container";
+        this.container          = document.createElement( "div" );
+        this.container.id       = "property-definitions-view-container";
 
         document.getElementById( SystemConstants.MAIN_CONTAINER ).appendChild( this.container );
 
@@ -32,6 +32,7 @@ export class PropertyDefinitionsView extends View {
         this.propertyDefinitions = new PropertyDefinitions( this, this.propertyDefinitionsContainer );
 
     }
+
 
 
     public enterScene(): void {

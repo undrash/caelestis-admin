@@ -1,20 +1,24 @@
 
 
-import {View} from "../core/View";
-import {INotification} from "../core/INotification";
-import {ISignal} from "../core/ISignal";
-import {ViewComponent} from "../core/ViewComponent";
-import {SystemConstants} from "../core/SystemConstants";
-import {ObjectsListing} from "./ObjectsListing";
-import {ObjectsFilter} from "./ObjectsFilter";
+import { ObjectNotifications } from "./ObjectNotifications";
+import { SystemConstants } from "../core/SystemConstants";
+import { ObjectCreateModal } from "./ObjectCreateModal";
+import { INotification } from "../core/INotification";
+import { ViewComponent } from "../core/ViewComponent";
+import { ObjectsListing } from "./ObjectsListing";
+import { ObjectsFilter } from "./ObjectsFilter";
+import { ISignal } from "../core/ISignal";
+import { View } from "../core/View";
+
+
+// CSS
+import "../_style/style-sheets/objects-view.scss";
 
 // HTML
 const objectsViewTemplate = require("../_view-templates/objects-view.html");
 
-// CSS
-import "../_style/style-sheets/objects-view.scss";
-import {ObjectNotifications} from "./ObjectNotifications";
-import {ObjectCreateModal} from "./ObjectCreateModal";
+
+
 
 
 
@@ -65,10 +69,13 @@ export class ObjectsView extends View {
 
     }
 
+
+
     private unregisterEventListeners(): void {
 
         this.objectsViewModalBackground.removeEventListener( "click", this.objectsViewModalBackgroundClickHandler );
     }
+
 
 
     private objectsViewModalBackgroundClickHandler(e: any): void {
@@ -79,6 +86,7 @@ export class ObjectsView extends View {
 
 
     }
+
 
 
     public enterScene(): void {
@@ -116,6 +124,7 @@ export class ObjectsView extends View {
         ( this.objectCreateModal as ObjectCreateModal ).populateObjectTypes();
 
     }
+
 
 
     private hideObjectCreateModal(): void {

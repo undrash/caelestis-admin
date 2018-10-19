@@ -1,6 +1,5 @@
 
 
-
 export class MainMenuNotifications {
 
     public static readonly MENU_ITEM_PROPERTY_DEFINITIONS: string = "MENU_ITEM_PROPERTY_DEFINITIONS";

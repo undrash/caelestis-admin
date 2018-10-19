@@ -1,11 +1,11 @@
 
 
-import {View} from "../core/View";
-import {INotification} from "../core/INotification";
-import {ISignal} from "../core/ISignal";
-import {ViewComponent} from "../core/ViewComponent";
-import {SystemConstants} from "../core/SystemConstants";
-import {ObjectTypes} from "./ObjectTypes";
+import { SystemConstants } from "../core/SystemConstants";
+import { INotification } from "../core/INotification";
+import { ViewComponent } from "../core/ViewComponent";
+import { ObjectTypes } from "./ObjectTypes";
+import { ISignal } from "../core/ISignal";
+import { View } from "../core/View";
 
 
 
@@ -30,7 +30,6 @@ export class ObjectTypesView extends View {
 
         this.objectTypes = new ObjectTypes( this, this.objectTypesContainer );
     }
-
 
 
 

@@ -1,22 +1,26 @@
 
-import {Promise} from 'es6-promise'
 
+import { PropertyDefinitionDatatypes } from "../property-definitions/PropertyDefinitionDatatypes";
+import { IPropertyDefinition } from "../connection/models/IPropertyDefinition";
+import { PropertyDefinition } from "../connection/models/PropertyDefinition";
 import { ViewComponent } from "../core/ViewComponent";
 import { View } from "../core/View";
-import {PropertyDefinitionDatatypes} from "../property-definitions/PropertyDefinitionDatatypes";
-import {IPropertyDefinition} from "../connection/models/IPropertyDefinition";
-import {PropertyDefinition} from "../connection/models/PropertyDefinition";
 
 // CSS
-import "../_style/style-sheets/object-types.scss";
 import "../_style/style-sheets/listing-menu-dropdown.scss";
+import "../_style/style-sheets/object-types.scss";
 
 // HTML
-const newOTModalTemplate = require("../_view-templates/object-types-edit-create-modal.html");
 const addPDModalTemplate = require("../_view-templates/object-types-select-properties-modal.html");
+const newOTModalTemplate = require("../_view-templates/object-types-edit-create-modal.html");
 const newPDModalTemplate = require("../_view-templates/property-definitions-add-modal.html");
 const dropDownMenuTemplate = require("../_view-templates/listing-menu-dropdown.html");
 const template = require("../_view-templates/object-types.html" );
+
+
+
+
+
 
 export class ObjectTypes extends ViewComponent {
 
@@ -859,9 +863,6 @@ export class ObjectTypes extends ViewComponent {
 
         return val;
     }
-
-
-
 
 
 }

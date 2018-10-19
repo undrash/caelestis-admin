@@ -1,9 +1,7 @@
 
 
-
-import {ViewComponent} from "../core/ViewComponent";
-import {View} from "../core/View";
-
+import { ViewComponent } from "../core/ViewComponent";
+import { View } from "../core/View";
 
 
 // CSS
@@ -13,6 +11,9 @@ import {ObjectNotifications} from "./ObjectNotifications";
 
 // HTML
 const template = require( "../_view-templates/objects-create-modal.html" );
+
+
+
 
 
 
@@ -71,12 +72,14 @@ export class ObjectCreateModal extends ViewComponent {
     }
 
 
+
     private objectTypeSelectChangeListener(e: any): void {
 
         this.propertiesContainer.innerHTML = "";
         this.populatePropertyValues();
 
     }
+
 
 
     private cancelBtnListener(e: any): void {
@@ -154,6 +157,7 @@ export class ObjectCreateModal extends ViewComponent {
     }
 
 
+
     public enterScene(): void {
         this.registerEventListeners();
 
@@ -167,7 +171,6 @@ export class ObjectCreateModal extends ViewComponent {
 
         this.view.componentExited( this.name );
     }
-
 
 
 
@@ -207,6 +210,7 @@ export class ObjectCreateModal extends ViewComponent {
     }
 
 
+
     private populatePropertyValues(): void {
 
         this.propertiesContainer.innerHTML = "";
@@ -237,6 +241,7 @@ export class ObjectCreateModal extends ViewComponent {
         }
 
     }
+
 
 
     private createPropertyInputFromPropDef(prop: any) {

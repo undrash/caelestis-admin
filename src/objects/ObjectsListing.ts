@@ -1,8 +1,8 @@
 
 
-import {ViewComponent} from "../core/ViewComponent";
-import {View} from "../core/View";
-import {ObjectNotifications} from "./ObjectNotifications";
+import { ObjectNotifications } from "./ObjectNotifications";
+import { ViewComponent } from "../core/ViewComponent";
+import { View } from "../core/View";
 
 // CSS
 import "../_style/style-sheets/objects-listing.scss";
@@ -11,6 +11,9 @@ import "../_style/style-sheets/objects-listing.scss";
 // HTML
 const template = require("../_view-templates/objects-listing.html");
 const dropDownMenuTemplate = require("../_view-templates/listing-menu-dropdown.html");
+
+
+
 
 
 
@@ -32,7 +35,7 @@ export class ObjectsListing extends ViewComponent {
 
         this.container.innerHTML = template;
 
-        this.objectsContainer           = document.getElementById( "object-listing-objects-container" );
+        this.objectsContainer            = document.getElementById( "object-listing-objects-container" );
         this.addBtn                      = document.getElementById( "object-listing-add-btn" ) as HTMLButtonElement;
 
 
@@ -81,6 +84,7 @@ export class ObjectsListing extends ViewComponent {
     }
 
 
+
     private objectItemMousedownListener(e: any): void {
         if ( e.which === 3 ) {
             this.dropdownMenu.style.top = e.pageY + "px";
@@ -90,6 +94,7 @@ export class ObjectsListing extends ViewComponent {
             this.dropdownMenuBackground.style.display = "block";
         }
     }
+
 
 
     private dropdownMenuBackgroundListener(e: any): void {
@@ -103,11 +108,11 @@ export class ObjectsListing extends ViewComponent {
     }
 
 
+
     private dropDownMenuDeleteListener(e: any): void {
         console.info( "delete clicked" );
         this.dropdownMenuBackground.style.display = "none";
     }
-
 
 
 
@@ -124,6 +129,7 @@ export class ObjectsListing extends ViewComponent {
 
         this.view.componentExited( this.name );
     }
+
 
 
     private populate(): void {
@@ -148,6 +154,7 @@ export class ObjectsListing extends ViewComponent {
         )
 
     }
+
 
 
     public createListItemFromObject(object: any): void {
@@ -193,5 +200,5 @@ export class ObjectsListing extends ViewComponent {
     }
 
 
-
 }
+

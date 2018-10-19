@@ -1,6 +1,6 @@
 
 
-import {SystemConstants} from "../core/SystemConstants";
+import { SystemConstants } from "../core/SystemConstants";
 import { INotification } from "../core/INotification";
 import { View } from "../core/View";
 
@@ -11,6 +11,7 @@ import {MainMenuNotifications} from "./MainMenuNotifications";
 
 // HTML template
 const template = require("../_view-templates/main-menu.html" );
+
 
 
 
@@ -28,18 +29,18 @@ export class MainMenuView extends View {
 
         console.info( "Main menu view initiated!" );
 
-        this.container = document.getElementById( SystemConstants.MAIN_MENU_CONTAINER );
+        this.container                  = document.getElementById( SystemConstants.MAIN_MENU_CONTAINER );
 
-        this.container.innerHTML = template;
+        this.container.innerHTML        = template;
 
-        this.menuItemPropDef = document.getElementById( "menu-item-property-definitions" );
-        this.menuItemObjType = document.getElementById( "menu-item-object-types" );
-        this.menuItemObj = document.getElementById( "menu-item-objects" );
+        this.menuItemPropDef            = document.getElementById( "menu-item-property-definitions" );
+        this.menuItemObjType            = document.getElementById( "menu-item-object-types" );
+        this.menuItemObj                = document.getElementById( "menu-item-objects" );
 
 
         this.menuItemPropDefListener    = this.menuItemPropDefListener.bind( this );
         this.menuItemObjTypeListener    = this.menuItemObjTypeListener.bind( this );
-        this.menuItemObjListener       = this.menuItemObjListener.bind( this );
+        this.menuItemObjListener        = this.menuItemObjListener.bind( this );
 
         this.enterScene();
     }
