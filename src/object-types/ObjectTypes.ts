@@ -12,8 +12,8 @@ import "../_style/style-sheets/object-types.scss";
 import "../_style/style-sheets/listing-menu-dropdown.scss";
 
 // HTML
-const newOTModalTemplate = require("../_view-templates/object-types-new-object-type-modal.html");
-const addPDModalTemplate = require("../_view-templates/object-types-add-properties-modal.html");
+const newOTModalTemplate = require("../_view-templates/object-types-edit-create-modal.html");
+const addPDModalTemplate = require("../_view-templates/object-types-select-properties-modal.html");
 const newPDModalTemplate = require("../_view-templates/property-definitions-add-modal.html");
 const dropDownMenuTemplate = require("../_view-templates/listing-menu-dropdown.html");
 const template = require("../_view-templates/object-types.html" );
@@ -31,6 +31,7 @@ export class ObjectTypes extends ViewComponent {
     private modalOTCancelBtn: HTMLButtonElement;
     private modalOTOKBtn: HTMLButtonElement;
     private modalOTSetNameBtn: HTMLButtonElement;
+    private modalOTRemovePropertyBtn: HTMLButtonElement;
 
 
     private modalSelectPD: HTMLElement;
@@ -58,8 +59,9 @@ export class ObjectTypes extends ViewComponent {
 
     private availableProperties: any[];
     private selectedProperties: any[];
+    private objectTypeProperties: any[];
 
-    private objectTypeNameProperty: string;
+    private objectTypeNamePropertyId: string;
 
     private editMode: boolean;
 
@@ -68,10 +70,11 @@ export class ObjectTypes extends ViewComponent {
     constructor(view: View, container: HTMLElement) {
         super( view, container );
 
-        this.availableProperties = [];
-        this.selectedProperties = [];
-        this.objectTypeNameProperty = null;
-        this.editMode = false;
+        this.availableProperties        = [];
+        this.selectedProperties         = [];
+        this.objectTypeProperties       = [];
+        this.objectTypeNamePropertyId   = null;
+        this.editMode                   = false;
 
 
         this.container.innerHTML = template;
@@ -96,6 +99,7 @@ export class ObjectTypes extends ViewComponent {
         this.modalOTCancelBtn               = document.getElementById( "ot-modal-cancel-btn" ) as HTMLButtonElement;
         this.modalOTOKBtn                   = document.getElementById( "ot-modal-ok-btn" ) as HTMLButtonElement;
         this.modalOTSetNameBtn              = document.getElementById( "ot-modal-set-name-property-btn" ) as HTMLButtonElement;
+        this.modalOTRemovePropertyBtn       = document.getElementById( "ot-modal-remove-property-btn" ) as HTMLButtonElement;
 
 
         this.modalSelectPD                     = document.getElementById( "ot-select-properties-modal-container" );
@@ -127,13 +131,14 @@ export class ObjectTypes extends ViewComponent {
         this.modalOTaddBtnListener              = this.modalOTaddBtnListener.bind( this );
         this.modalOTCancelBtnListener           = this.modalOTCancelBtnListener.bind( this );
         this.modalOTOKBtnListener               = this.modalOTOKBtnListener.bind( this );
-        this.modalOTEditPropertiesListener      = this.modalOTEditPropertiesListener.bind( this );
-        this.modalEditPDCancelBtnListener       = this.modalEditPDCancelBtnListener.bind( this );
-        this.modalEditPDNewPropBtnListener      = this.modalEditPDNewPropBtnListener.bind( this );
+        this.modalOTSelectPropertiesListener    = this.modalOTSelectPropertiesListener.bind( this );
+        this.modalOTRemovePropertyBtnListener   = this.modalOTRemovePropertyBtnListener.bind( this );
+        this.modalSelectPDCancelBtnListener     = this.modalSelectPDCancelBtnListener.bind( this );
+        this.modalSelectPDNewPropBtnListener    = this.modalSelectPDNewPropBtnListener.bind( this );
         this.modalNewPDCancelBtnListener        = this.modalNewPDCancelBtnListener.bind( this );
         this.modalNewPDDataTypeChangeListener   = this.modalNewPDDataTypeChangeListener.bind( this );
         this.modalNewPDOKBtnListener            = this.modalNewPDOKBtnListener.bind( this );
-        this.modalEditPDOKBtnListener           = this.modalEditPDOKBtnListener.bind( this );
+        this.modalSelectPDOKBtnListener         = this.modalSelectPDOKBtnListener.bind( this );
         this.modalOTPropertySelectionListener   = this.modalOTPropertySelectionListener.bind( this );
         this.modalOTSetNameBtnListener          = this.modalOTSetNameBtnListener.bind( this );
         this.dropdownMenuBackgroundListener     = this.dropdownMenuBackgroundListener.bind( this );
@@ -153,13 +158,14 @@ export class ObjectTypes extends ViewComponent {
         this.modalBackground.addEventListener( "click", this.modalBackgroundListener );
         this.modalOTCancelBtn.addEventListener( "click", this.modalOTCancelBtnListener );
         this.modalOTOKBtn.addEventListener( "click", this.modalOTOKBtnListener );
-        this.modalOTSelectPropertiesBtn.addEventListener( "click", this.modalOTEditPropertiesListener );
-        this.modalSelectPDCancelBtn.addEventListener( "click", this.modalEditPDCancelBtnListener );
-        this.modalSelectPDNewPropBtn.addEventListener( "click", this.modalEditPDNewPropBtnListener );
+        this.modalOTSelectPropertiesBtn.addEventListener( "click", this.modalOTSelectPropertiesListener );
+        this.modalOTRemovePropertyBtn.addEventListener( "click", this.modalOTRemovePropertyBtnListener );
+        this.modalSelectPDCancelBtn.addEventListener( "click", this.modalSelectPDCancelBtnListener );
+        this.modalSelectPDNewPropBtn.addEventListener( "click", this.modalSelectPDNewPropBtnListener );
+        this.modalSelectPDOKBtn.addEventListener( "click", this.modalSelectPDOKBtnListener );
         this.modalNewPDCancelBtn.addEventListener( "click", this.modalNewPDCancelBtnListener );
         this.modalNewPDDataTypeSelect.addEventListener( "change", this.modalNewPDDataTypeChangeListener );
         this.modalNewPDOKBtn.addEventListener( "click", this.modalNewPDOKBtnListener );
-        this.modalSelectPDOKBtn.addEventListener( "click", this.modalEditPDOKBtnListener );
         this.modalOTSetNameBtn.addEventListener( "click", this.modalOTSetNameBtnListener );
         this.dropdownMenuBackground.addEventListener( "click", this.dropdownMenuBackgroundListener );
         this.dropdownMenuEdit.addEventListener( "click", this.dropDownMenuEditListener );
@@ -176,13 +182,14 @@ export class ObjectTypes extends ViewComponent {
         this.modalBackground.removeEventListener( "click", this.modalBackgroundListener );
         this.modalOTCancelBtn.removeEventListener( "click", this.modalOTCancelBtnListener );
         this.modalOTOKBtn.removeEventListener( "click", this.modalOTOKBtnListener );
-        this.modalOTSelectPropertiesBtn.removeEventListener( "click", this.modalOTEditPropertiesListener );
-        this.modalSelectPDCancelBtn.removeEventListener( "click", this.modalEditPDCancelBtnListener );
-        this.modalSelectPDNewPropBtn.removeEventListener( "click", this.modalEditPDNewPropBtnListener );
+        this.modalOTSelectPropertiesBtn.removeEventListener( "click", this.modalOTSelectPropertiesListener );
+        this.modalOTRemovePropertyBtn.addEventListener( "click", this.modalOTRemovePropertyBtnListener );
+        this.modalSelectPDCancelBtn.removeEventListener( "click", this.modalSelectPDCancelBtnListener );
+        this.modalSelectPDNewPropBtn.removeEventListener( "click", this.modalSelectPDNewPropBtnListener );
+        this.modalSelectPDOKBtn.removeEventListener( "click", this.modalSelectPDOKBtnListener );
         this.modalNewPDCancelBtn.removeEventListener( "click", this.modalNewPDCancelBtnListener );
         this.modalNewPDDataTypeSelect.removeEventListener( "change", this.modalNewPDDataTypeChangeListener );
         this.modalNewPDOKBtn.removeEventListener( "click", this.modalNewPDOKBtnListener );
-        this.modalSelectPDOKBtn.removeEventListener( "click", this.modalEditPDOKBtnListener );
         this.modalOTSetNameBtn.removeEventListener( "click", this.modalOTSetNameBtnListener );
         this.dropdownMenuBackground.removeEventListener( "click", this.dropdownMenuBackgroundListener );
         this.dropdownMenuEdit.removeEventListener( "click", this.dropDownMenuEditListener );
@@ -215,22 +222,37 @@ export class ObjectTypes extends ViewComponent {
 
 
 
-    private modalOTEditPropertiesListener(e: any): void {
-        this.populateEditPropertiesModal();
+    private modalOTSelectPropertiesListener(e: any): void {
+        this.populateSelectPropertiesModal();
         this.modalOT.style.display = "none";
         this.modalSelectPD.style.display = "block";
     }
 
 
 
-    private modalEditPDCancelBtnListener(e: any): void {
-        this.modalSelectPD.style.display = "none";
-        this.modalOT.style.display = "block";
+    private modalOTRemovePropertyBtnListener(e: any): void {
+        if ( ! document.getElementsByClassName( "property-selected" ).length ) return;
+
+        const property = document.getElementsByClassName( "property-selected" )[0];
+
+        this.objectTypeProperties = this.objectTypeProperties.filter( p => p._id !== property.id );
+
+        property.parentElement.removeChild( property );
+
     }
 
 
 
-    private modalEditPDNewPropBtnListener(e: any): void {
+    private modalSelectPDCancelBtnListener(e: any): void {
+        this.modalSelectPD.style.display                = "none";
+        this.modalOT.style.display                      = "block";
+        this.selectedProperties                         = [];
+        this.modalSelectPDPropertyContainer.innerHTML   = "";
+    }
+
+
+
+    private modalSelectPDNewPropBtnListener(e: any): void {
         this.modalSelectPD.style.display = "none";
         this.modalNewPD.style.display = "block";
     }
@@ -283,10 +305,10 @@ export class ObjectTypes extends ViewComponent {
     private modalNewPDOKBtnListener(e: any): void {
         const propDef = this.createPropertyDefinition();
 
-        this.modalNewPD.style.display = "none";
-        this.modalNewPDDataTypeSelect.value = "1";
-        this.modalNewPDObjectTypeContainer.style.display = "none";
-        this.modalSelectPD.style.display = "block";
+        this.modalNewPD.style.display                       = "none";
+        this.modalNewPDDataTypeSelect.value                 = "1";
+        this.modalNewPDObjectTypeContainer.style.display    = "none";
+        this.modalSelectPD.style.display                    = "block";
 
 
         this.connection.createPropertyDefinition(
@@ -297,29 +319,7 @@ export class ObjectTypes extends ViewComponent {
 
                 this.availableProperties.push( propertyDef );
 
-                let propDefItem = document.createElement( "li" );
-                propDefItem.id = propertyDef._id;
-                propDefItem.className = "ot-select-properties-property";
-
-                let required = document.createElement( "input");
-                required.type = "checkbox";
-                required.id = propertyDef._id + "-checkbox";
-                required.className = "ot-select-properties-modal-property-required-checkbox";
-
-                let propDefName = document.createElement( "span" );
-                propDefName.className = "ot-select-properties-modal-property-name";
-                propDefName.innerHTML = propertyDef.name;
-
-                let propDefDataType = document.createElement( "span" );
-                propDefDataType.className = "ot-select-properties-modal-property-data-type";
-                propDefDataType.innerHTML = this.parseDataType( propertyDef.dataType );
-
-                propDefItem.appendChild( required );
-                propDefItem.appendChild( propDefName );
-                propDefItem.appendChild( propDefDataType );
-
-                this.modalSelectPDPropertyContainer.appendChild( propDefItem );
-
+                this.createSelectPDListItemFromProperty( propertyDef );
 
             },
             (message: string) => {
@@ -334,50 +334,25 @@ export class ObjectTypes extends ViewComponent {
 
 
 
-    private modalEditPDOKBtnListener(e: any): void {
+    private modalSelectPDOKBtnListener(e: any): void {
 
 
+        for ( let property of this.selectedProperties ) {
 
-
-        const propDefElements = this.modalSelectPDPropertyContainer.children;
-
-        for ( let i = 0; i < propDefElements.length; i++ ) {
-            let checkbox = document.getElementById( propDefElements[i].id + "-checkbox" ) as HTMLInputElement;
-
-            let result = this.availableProperties.filter( prop => prop._id === propDefElements[i].id );
-
-            if ( result.length > 1 ) console.warn( "Warning, multiple properties with the same id found in the properties collection." );
-
-            if ( ! result.length ){
-                console.warn( "Selected property not found in the properties collection." );
-                return;
-            }
-
-            let prop = result[0];
-
-
-            if ( checkbox.checked ) {
-
-                if ( this.selectedProperties.filter( p => p._id === prop._id ).length < 1 ) {
-                    this.selectedProperties.push( prop );
-                }
-
-            } else {
-
-                if ( this.selectedProperties.filter( p => p._id === prop._id ).length > 0 ) {
-
-                    this.selectedProperties = this.selectedProperties.filter( p => p._id !== prop._id );
-
-                }
-            }
+            this.createOTPropListItemFromProperty( property );
         }
 
+        this.selectedProperties = [];
 
-        this.modalOTPropertiesContainer.innerHTML = "";
+        this.modalSelectPDPropertyContainer.innerHTML   = "";
+        this.modalSelectPD.style.display                = "none";
+        this.modalOT.style.display                      = "block";
 
-        for ( let i = 0; i < this.selectedProperties.length; i++ ) {
+    }
 
-            let property = this.selectedProperties[i];
+
+
+    private createOTPropListItemFromProperty(property: any): void {
 
             let propDefItem = document.createElement( "li" );
             propDefItem.id = property._id;
@@ -391,13 +366,11 @@ export class ObjectTypes extends ViewComponent {
             propDefDataType.className = "ot-modal-property-data-type";
             propDefDataType.innerHTML = this.parseDataType( property.dataType );
 
-
             let propDefRequiredCheckbox = document.createElement( "input" );
             propDefRequiredCheckbox.id = property._id + "-checkbox-required";
             propDefRequiredCheckbox.type = "checkbox";
             propDefRequiredCheckbox.className = "ot-modal-property-required-checkbox";
 
-            if ( property.required ) propDefRequiredCheckbox.checked = true;
 
             propDefItem.appendChild( propDefName );
             propDefItem.appendChild( propDefRequiredCheckbox );
@@ -408,15 +381,16 @@ export class ObjectTypes extends ViewComponent {
 
             propDefItem.addEventListener( "click", this.modalOTPropertySelectionListener );
 
+
             propDefRequiredCheckbox.addEventListener( "change", (e: any) => {
 
                 const id = e.target.parentElement.id;
 
-                for ( let i = 0; i < this.selectedProperties.length; i++ ) {
+                for ( let i = 0; i < this.objectTypeProperties.length; i++ ) {
 
-                    if ( this.selectedProperties[i]._id === id ) {
+                    if ( this.objectTypeProperties[i]._id === id ) {
 
-                        this.selectedProperties[i].required = e.target.checked;
+                        this.objectTypeProperties[i].required = e.target.checked;
 
                         break;
                     }
@@ -425,32 +399,29 @@ export class ObjectTypes extends ViewComponent {
 
             });
 
-        }
 
-
-        this.modalSelectPD.style.display = "none";
-        this.modalOT.style.display = "block";
-
-
+        this.objectTypeProperties.push( property );
     }
 
 
 
     private modalOTOKBtnListener(): void {
 
-        const id = this.activeObjectTypeId;
-        const name = this.modalOTNameInput.value;
-        const nameProperty = this.objectTypeNameProperty;
+        const id            = this.activeObjectTypeId;
+        const name          = this.modalOTNameInput.value;
+        const nameProperty  = this.objectTypeNamePropertyId;
 
         const properties = [];
 
-        for ( let prop of this.selectedProperties ) {
+        for ( let prop of this.objectTypeProperties ) {
             properties.push( { id: prop._id, required: prop.required } );
         }
 
-        this.modalBackground.style.display = "none";
-        this.modalOTNameInput.value = "";
-        this.modalOTPropertiesContainer.innerHTML = "";
+        this.objectTypeProperties = [];
+
+        this.modalBackground.style.display          = "none";
+        this.modalOTNameInput.value                 = "";
+        this.modalOTPropertiesContainer.innerHTML   = "";
 
         if ( ! this.editMode ) {
 
@@ -516,23 +487,15 @@ export class ObjectTypes extends ViewComponent {
 
     private modalOTSetNameBtnListener(e: any): void {
 
-        console.log( "set name clicked" );
-        console.log( document.getElementsByClassName( "property-selected" ) );
-
         if ( ! document.getElementsByClassName( "property-selected" ).length ) return;
-
-        console.log( "no return" );
 
         const property = document.getElementsByClassName( "property-selected" )[0];
 
-        this.objectTypeNameProperty = property.id;
+        this.objectTypeNamePropertyId = property.id;
 
-        console.log( "name property " + this.objectTypeNameProperty );
 
         const checkboxes = document.getElementsByClassName( "ot-modal-property-required-checkbox" );
 
-        console.log( "checkboxes" );
-        console.log( checkboxes );
 
         for ( let i = 0; i < checkboxes.length; i++ ) {
             (checkboxes[i] as HTMLInputElement).disabled = false;
@@ -540,7 +503,6 @@ export class ObjectTypes extends ViewComponent {
 
         const checkbox = document.getElementById( property.id + "-checkbox-required" ) as HTMLInputElement;
 
-        console.log( checkbox );
 
         checkbox.checked = true;
         checkbox.disabled = true;
@@ -560,47 +522,47 @@ export class ObjectTypes extends ViewComponent {
 
         this.editMode = true;
 
-        console.info( "edit clicked" );
-        this.dropdownMenuBackground.style.display = "none";
-        this.modalBackground.style.display = "block";
-        this.modalOTOKBtn.innerHTML = "SAVE";
+        this.dropdownMenuBackground.style.display   = "none";
+        this.modalBackground.style.display          = "block";
+        this.modalOTOKBtn.innerHTML                 = "SAVE";
 
-        this.modalOTNameInput.value = "";
-        this.modalOTPropertiesContainer.innerHTML = "";
+        this.modalOTNameInput.value                 = "";
+        this.modalOTPropertiesContainer.innerHTML   = "";
 
         this.connection.getObjectTypeById(
             this.activeObjectTypeId,
             (response: any) => {
                 const { objectType } = response;
 
-                this.modalOTNameInput.value = objectType.name;
-                this.selectedProperties = objectType.properties;
+                this.modalOTNameInput.value     = objectType.name;
+                this.objectTypeProperties       = objectType.properties;
 
                 for ( let property of objectType.properties ) {
 
-                    let propDefItem = document.createElement( "li" );
-                    propDefItem.id = property._id;
-                    propDefItem.className = "ot-modal-property";
+                    let propDefItem         = document.createElement( "li" );
+                    propDefItem.id          = property._id;
+                    propDefItem.className   = "ot-modal-property";
 
-                    let propDefName = document.createElement( "span" );
-                    propDefName.className = "ot-modal-property-name";
-                    propDefName.innerHTML = property.name;
+                    let propDefName         = document.createElement( "span" );
+                    propDefName.className   = "ot-modal-property-name";
+                    propDefName.innerHTML   = property.name;
 
-                    let propDefDataType = document.createElement( "span" );
-                    propDefDataType.className = "ot-modal-property-data-type";
-                    propDefDataType.innerHTML = this.parseDataType( property.dataType );
+                    let propDefDataType         = document.createElement( "span" );
+                    propDefDataType.className   = "ot-modal-property-data-type";
+                    propDefDataType.innerHTML   = this.parseDataType( property.dataType );
 
 
-                    let propDefRequiredCheckbox = document.createElement( "input" );
-                    propDefRequiredCheckbox.id = property._id + "-checkbox-required";
-                    propDefRequiredCheckbox.type = "checkbox";
-                    propDefRequiredCheckbox.className = "ot-modal-property-required-checkbox";
+                    let propDefRequiredCheckbox         = document.createElement( "input" );
+                    propDefRequiredCheckbox.id          = property._id + "-checkbox-required";
+                    propDefRequiredCheckbox.type        = "checkbox";
+                    propDefRequiredCheckbox.className   = "ot-modal-property-required-checkbox";
 
                     if ( property.required ) propDefRequiredCheckbox.checked = true;
 
                     if ( objectType.nameProperty === property._id ) {
-                        propDefRequiredCheckbox.checked = true;
-                        propDefRequiredCheckbox.disabled = true;
+                        this.objectTypeNamePropertyId       = objectType.nameProperty;
+                        propDefRequiredCheckbox.checked     = true;
+                        propDefRequiredCheckbox.disabled    = true;
                     }
 
                     propDefItem.appendChild( propDefName );
@@ -616,11 +578,11 @@ export class ObjectTypes extends ViewComponent {
 
                         const id = e.target.parentElement.id;
 
-                        for ( let i = 0; i < this.selectedProperties.length; i++ ) {
+                        for ( let i = 0; i < this.objectTypeProperties.length; i++ ) {
 
-                            if ( this.selectedProperties[i]._id === id ) {
+                            if ( this.objectTypeProperties[i]._id === id ) {
 
-                                this.selectedProperties[i].required = e.target.checked;
+                                this.objectTypeProperties[i].required = e.target.checked;
 
                                 break;
                             }
@@ -662,6 +624,11 @@ export class ObjectTypes extends ViewComponent {
 
 
     private createListItemFromObjectType(objectType: any): void {
+
+        let prevOTItem: HTMLElement = document.getElementById( objectType._id );
+
+        if ( prevOTItem ) prevOTItem.parentNode.removeChild( prevOTItem );
+
         let otItem = document.createElement( "div" );
         otItem.id = objectType._id;
         otItem.className = "object-type-item";
@@ -787,44 +754,18 @@ export class ObjectTypes extends ViewComponent {
 
 
 
-    private populateEditPropertiesModal(): void {
+    private populateSelectPropertiesModal(): void {
 
         this.connection.getPropertyDefinitions(
             (response: any) => {
                 const { properties } = response;
 
-                this.availableProperties = properties;
+                const objectTypeProperties = this.objectTypeProperties.map( p => p._id );
 
-                const currentPropSelection: string[] = this.selectedProperties.map( p => p._id );
+                this.availableProperties = properties.filter( (p: any) => objectTypeProperties.indexOf( p._id ) < 0 );
 
-                for ( let i = 0; i < properties.length; i++ ) {
-
-                    if ( currentPropSelection.indexOf( properties[i]._id ) > -1 ) continue;
-
-                    let property = document.createElement( "li" );
-                    property.id = properties[i]._id;
-                    property.className = "ot-select-properties-property";
-
-                    let checkbox = document.createElement( "input" );
-                    checkbox.type = "checkbox";
-                    checkbox.id = properties[i]._id + "-checkbox";
-                    checkbox.className = "ot-select-properties-modal-property-required-checkbox";
-
-                    let name = document.createElement( "span" );
-                    name.id = properties[i]._id + "-name";
-                    name.className = "ot-select-properties-modal-property-name";
-                    name.innerHTML = properties[i].name;
-
-                    let dataType = document.createElement( "span" );
-                    dataType.id = properties[i]._id + "-data-type";
-                    dataType.className = "ot-select-properties-modal-property-data-type";
-                    dataType.innerHTML = this.parseDataType( properties[i].dataType );
-
-                    property.appendChild( checkbox );
-                    property.appendChild( name );
-                    property.appendChild( dataType );
-
-                    this.modalSelectPDPropertyContainer.appendChild( property );
+                for ( let property of this.availableProperties ) {
+                    this.createSelectPDListItemFromProperty( property );
                 }
 
 
@@ -834,6 +775,51 @@ export class ObjectTypes extends ViewComponent {
             }
         )
 
+
+    }
+
+
+
+    private createSelectPDListItemFromProperty(property: any): void {
+
+        let propItem        = document.createElement( "li" );
+        propItem.id         = property._id + "-pd";
+        propItem.className  = "ot-select-properties-property";
+
+        let checkbox        = document.createElement( "input" );
+        checkbox.type       = "checkbox";
+        checkbox.id         = property._id + "-checkbox";
+        checkbox.className  = "ot-select-properties-modal-property-required-checkbox";
+
+        let name            = document.createElement( "span" );
+        name.id             = property._id + "-name";
+        name.className      = "ot-select-properties-modal-property-name";
+        name.innerHTML      = property.name;
+
+        let dataType        = document.createElement( "span" );
+        dataType.id         = property._id + "-data-type";
+        dataType.className  = "ot-select-properties-modal-property-data-type";
+        dataType.innerHTML  = this.parseDataType( property.dataType );
+
+        propItem.appendChild( checkbox );
+        propItem.appendChild( name );
+        propItem.appendChild( dataType );
+
+        this.modalSelectPDPropertyContainer.appendChild( propItem );
+
+        checkbox.addEventListener( "change", (e: any) => {
+
+            const propItemId = e.target.parentElement.id;
+            const propId = propItemId.substring(0, propItemId.length - 3);
+
+            if ( checkbox.checked ) {
+                this.selectedProperties.push( this.availableProperties.filter( p => p._id === propId )[0] );
+                console.log( this.selectedProperties );
+            } else {
+                this.selectedProperties = this.selectedProperties.filter( p => p._id !== propId );
+                console.log( this.selectedProperties );
+            }
+        });
 
     }
 
