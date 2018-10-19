@@ -13,6 +13,7 @@ import { View } from "../core/View";
 
 // CSS
 import "../_style/style-sheets/objects-view.scss";
+import {ObjectEditModal} from "./ObjectEditModal";
 
 // HTML
 const objectsViewTemplate = require("../_view-templates/objects-view.html");
@@ -26,10 +27,12 @@ export class ObjectsView extends View {
     private objectsFilter: ViewComponent;
     private objectsListing: ViewComponent;
     private objectCreateModal: ViewComponent;
+    private objectEditModal: ViewComponent;
 
     private objectsFilterContainer: HTMLElement;
     private objectsListingContainer: HTMLElement;
     private objectCreateModalContainer: HTMLElement;
+    private objectEditModalContainer: HTMLElement;
 
     private objectsViewModalBackground: HTMLElement;
 
@@ -49,10 +52,13 @@ export class ObjectsView extends View {
         this.objectsFilterContainer     = document.getElementById( "objects-filter-container" );
         this.objectsListingContainer    = document.getElementById( "objects-object-listing-container" );
         this.objectCreateModalContainer = document.getElementById( "objects-object-create-modal-container" );
+        this.objectEditModalContainer   = document.getElementById( "objects-object-edit-modal-container" );
 
         this.objectsFilter      = new ObjectsFilter( this, this.objectsFilterContainer );
         this.objectsListing     = new ObjectsListing( this, this.objectsListingContainer );
         this.objectCreateModal  = new ObjectCreateModal( this, this.objectCreateModalContainer );
+        this.objectEditModal    = new ObjectEditModal( this, this.objectEditModalContainer );
+
 
 
         this.objectsViewModalBackgroundClickHandler = this.objectsViewModalBackgroundClickHandler.bind( this );
@@ -92,7 +98,6 @@ export class ObjectsView extends View {
     public enterScene(): void {
         this.registerEventListeners();
 
-
     }
 
 
@@ -105,6 +110,7 @@ export class ObjectsView extends View {
         this.objectsFilter.exitScene( exitType );
         this.objectsListing.exitScene( exitType );
         this.objectCreateModal.exitScene( exitType );
+        this.objectEditModal.exitScene( exitType );
 
     }
 
@@ -120,14 +126,24 @@ export class ObjectsView extends View {
 
     private objectListingAddBtnClicked(): void {
 
-        this.objectsViewModalBackground.style.display = "block";
+        this.objectsViewModalBackground.style.display   = "block";
+        this.objectEditModalContainer.style.display     = "none";
+        this.objectCreateModalContainer.style.display   = "block";
+
         ( this.objectCreateModal as ObjectCreateModal ).populateObjectTypes();
 
     }
 
 
+    private objectListingEditBtnClicked(): void {
+        this.objectsViewModalBackground.style.display   = "block";
+        this.objectCreateModalContainer.style.display   = "none";
+        this.objectEditModalContainer.style.display     = "block";
+    }
 
-    private hideObjectCreateModal(): void {
+
+
+    private hideModals(): void {
         this.objectsViewModalBackground.style.display = "none";
     }
 
@@ -158,15 +174,27 @@ export class ObjectsView extends View {
 
                 break;
 
+            case ObjectNotifications.OBJECTS_LISTING_EDIT_BTN_CLICKED :
+
+                this.objectListingEditBtnClicked();
+
+                break;
+
             case ObjectNotifications.OBJECTS_CREATE_HIDE :
 
-                this.hideObjectCreateModal();
+                this.hideModals();
+
+                break;
+
+            case ObjectNotifications.OBJECTS_EDIT_HIDE :
+
+                this.hideModals();
 
                 break;
 
             case ObjectNotifications.OBJECTS_CREATE_OBJECT_CREATED :
 
-                this.hideObjectCreateModal();
+                this.hideModals();
                 ( this.objectsListing as ObjectsListing ).createListItemFromObject( signal.data );
 
                 break;

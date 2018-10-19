@@ -151,6 +151,19 @@ export class ConnectionProxy extends CoreEntity {
     }
 
 
+
+    public getObjectById(id: string, success: Function, failure: Function): void {
+        this.httpRequest(
+            "GET",
+            "/api/v1/objects/" + id,
+            null,
+            success,
+            failure
+        );
+    }
+
+
+
     //TODO should work via Search Conditions
     public getObjectByType(type: string, success: Function, failure: Function): void {
         this.httpRequest(

@@ -1,13 +1,12 @@
 
 
+import { PropertyDefinitionDatatypes } from "../property-definitions/PropertyDefinitionDatatypes";
+import { ObjectNotifications } from "./ObjectNotifications";
 import { ViewComponent } from "../core/ViewComponent";
 import { View } from "../core/View";
 
-
 // CSS
 import "../_style/style-sheets/objects-create-modal.scss";
-import {PropertyDefinitionDatatypes} from "../property-definitions/PropertyDefinitionDatatypes";
-import {ObjectNotifications} from "./ObjectNotifications";
 
 // HTML
 const template = require( "../_view-templates/objects-create-modal.html" );

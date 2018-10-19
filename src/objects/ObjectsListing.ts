@@ -105,6 +105,7 @@ export class ObjectsListing extends ViewComponent {
     private dropDownMenuEditListener(e: any): void {
         console.info( "edit clicked" );
         this.dropdownMenuBackground.style.display = "none";
+        this.sendSignal( ObjectNotifications.OBJECTS_LISTING_EDIT_BTN_CLICKED );
     }
 
 
