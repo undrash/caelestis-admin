@@ -97,6 +97,17 @@ export class ObjectEditModal extends ViewComponent {
 
     public loadObject(id: string): void {
 
+        this.connection.getObjectById(
+            id,
+            (response: any) => {
+                const { object } = response;
+                console.log( object );
+            },
+            (message: string) => {
+                console.warn( message );
+            }
+        )
+
     }
 
 }

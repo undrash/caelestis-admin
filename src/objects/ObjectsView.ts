@@ -135,10 +135,12 @@ export class ObjectsView extends View {
     }
 
 
-    private objectListingEditBtnClicked(): void {
+    private objectListingEditBtnClicked( id: string): void {
         this.objectsViewModalBackground.style.display   = "block";
         this.objectCreateModalContainer.style.display   = "none";
         this.objectEditModalContainer.style.display     = "block";
+
+        ( this.objectEditModal as ObjectEditModal ).loadObject( id );
     }
 
 
@@ -176,7 +178,7 @@ export class ObjectsView extends View {
 
             case ObjectNotifications.OBJECTS_LISTING_EDIT_BTN_CLICKED :
 
-                this.objectListingEditBtnClicked();
+                this.objectListingEditBtnClicked( signal.data );
 
                 break;
 
