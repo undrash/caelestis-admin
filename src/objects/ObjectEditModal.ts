@@ -88,12 +88,23 @@ export class ObjectEditModal extends ViewComponent {
 
             const input = ( propertyInputs[i] ) as HTMLInputElement;
 
-            properties.push(
-                {
-                    propertyDef: input.id,
-                    value: input.value
-                }
-            )
+            if ( input.type === "checkbox" ) {
+                properties.push(
+                    {
+                        propertyDef: input.id,
+                        value: input.checked
+                    }
+                )
+            } else {
+                properties.push(
+                    {
+                        propertyDef: input.id,
+                        value: input.value
+                    }
+                )
+            }
+
+
         }
 
 
@@ -180,6 +191,7 @@ export class ObjectEditModal extends ViewComponent {
                 propValInput = document.createElement( "input" );
                 propValInput.type = "text";
                 propValInput.className = "property-value";
+                if ( propertyValue.value ) propValInput.value = propertyValue.value;
 
                 break;
 
@@ -188,6 +200,7 @@ export class ObjectEditModal extends ViewComponent {
                 propValInput = document.createElement( "input" );
                 propValInput.type = "number";
                 propValInput.className = "property-value";
+                if ( propertyValue.value ) propValInput.value = propertyValue.value;
 
                 break;
 
@@ -213,6 +226,16 @@ export class ObjectEditModal extends ViewComponent {
                 propValInput = document.createElement( "input" );
                 propValInput.type = "date";
                 propValInput.className = "property-value";
+                if ( propertyValue.value ) {
+
+                    console.log( propertyValue.value );
+
+                    propValInput.valueAsDate = new Date( propertyValue.value );
+
+
+                }
+
+                console.log( "date value: " + new Date( propertyValue.value ).getDate() );
 
                 break;
 
@@ -222,6 +245,8 @@ export class ObjectEditModal extends ViewComponent {
                 propValInput.type = "checkbox";
                 propValInput.className = "property-value property-value-checkbox";
 
+                if ( propertyValue.value ) propValInput.checked = propertyValue.value;
+
                 break;
 
 
@@ -230,7 +255,7 @@ export class ObjectEditModal extends ViewComponent {
 
         }
 
-        if ( propertyValue.value ) propValInput.value = propertyValue.value;
+
         propValInput.id = propertyValue.propertyDef._id;
 
         propValContainer.appendChild( propValTitle );
