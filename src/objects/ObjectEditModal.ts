@@ -213,7 +213,7 @@ export class ObjectEditModal extends ViewComponent {
                     let option = document.createElement( "option" );
                     option.value = propertyValue._id;
 
-                    option.text = propertyValue.value;
+                    option.text = propertyValue.displayValue;
 
                     propValInput.add( option );
                 }

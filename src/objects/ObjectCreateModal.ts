@@ -286,13 +286,17 @@ export class ObjectCreateModal extends ViewComponent {
                 propValInput = document.createElement( "select" );
                 propValInput.className = "property-value property-value-select";
 
+                let option = document.createElement( "option" );
+                option.value = "";
+                option.text = "Link an object";
+                propValInput.add( option );
+
                 this.connection.getObjectByType(
                     prop.objectType,
                     (response: any) => {
                         const { objects } = response;
 
                         for ( let object of objects ) {
-
 
                             console.log( object );
 
