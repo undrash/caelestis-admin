@@ -11,6 +11,8 @@ export class ObjectNotifications {
     public static readonly OBJECTS_EDIT_HIDE: string = "OBJECTS_EDIT_HIDE";
     public static readonly OBJECTS_EDIT_OBJECT_EDITED: string = "OBJECTS_EDIT_OBJECT_EDITED";
 
+    public static readonly OBJECTS_FILTER_RESULT: string = "OBJECTS_FILTER_RESULT";
+
 
 
 }

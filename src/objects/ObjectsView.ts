@@ -208,6 +208,13 @@ export class ObjectsView extends View {
                 break;
 
 
+            case ObjectNotifications.OBJECTS_FILTER_RESULT :
+
+                ( this.objectsListing as ObjectsListing ).loadObjects( signal.data );
+
+                break;
+
+
             default:
                 break;
         }

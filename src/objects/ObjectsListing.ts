@@ -204,5 +204,15 @@ export class ObjectsListing extends ViewComponent {
     }
 
 
+
+    public loadObjects(objects: any): void {
+        this.objectsContainer.innerHTML = "";
+
+        for ( let object of objects ) {
+            this.createListItemFromObject( object );
+        }
+    }
+
+
 }
 

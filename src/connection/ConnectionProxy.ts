@@ -203,6 +203,18 @@ export class ConnectionProxy extends CoreEntity {
 
 
 
+    public searchForObjectsByConditions(data: any, success: Function, failure: Function): void {
+        this.httpRequest(
+            "POST",
+            "/api/v1/objects/search",
+            data,
+            success,
+            failure
+        )
+    }
+
+
+
     private httpRequest(method: string, endpoint: string, data: any, success: Function, failure: Function): XMLHttpRequest {
 
         let xhr = new XMLHttpRequest();
