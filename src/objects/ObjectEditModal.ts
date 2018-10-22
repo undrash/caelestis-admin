@@ -40,7 +40,7 @@ export class ObjectEditModal extends ViewComponent {
         this.objectTypeName         = document.getElementById( "objects-edit-modal-object-type" );
         this.propertiesContainer    = document.getElementById( "objects-edit-properties-container" );
         this.cancelBtn              = document.getElementById( "objects-edit-cancel-btn" ) as HTMLButtonElement;
-        this.saveBtn              = document.getElementById( "objects-edit-create-btn" ) as HTMLButtonElement;
+        this.saveBtn                 = document.getElementById( "objects-edit-create-btn" ) as HTMLButtonElement;
 
 
         this.cancelBtnListener              = this.cancelBtnListener.bind( this );
@@ -208,15 +208,52 @@ export class ObjectEditModal extends ViewComponent {
 
                 propValInput = document.createElement( "select" );
                 propValInput.className = "property-value property-value-select";
+                let initialOption: HTMLOptionElement = null;
 
                 if ( propertyValue.value ) {
                     let option = document.createElement( "option" );
-                    option.value = propertyValue._id;
+                    option.value = propertyValue.value;
 
                     option.text = propertyValue.displayValue;
 
                     propValInput.add( option );
+                    initialOption = option;
                 }
+
+                propValInput.addEventListener( "focus", () => {
+                    const { objectType } = propertyValue.propertyDef;
+
+                    this.connection.getObjectByType(
+                        objectType,
+                        (response: any) => {
+                            const { objects } = response;
+
+                            if ( ! objects.length ) return;
+
+                            propValInput.innerHTML = "";
+                            propValInput.add( initialOption );
+
+
+
+                            for ( let object of objects ) {
+
+                                if ( object._id === (initialOption as HTMLOptionElement).value ) continue;
+
+                                let option = document.createElement( "option" );
+                                option.value = object._id;
+
+                                const titleProp = object.properties.filter( (p: any) => p.propertyDef._id === object.type.nameProperty )[0];
+
+                                option.text = titleProp.value;
+
+                                propValInput.add( option );
+                            }
+                        },
+                        (message: string) => {
+                            console.error( message );
+                        }
+                    )
+                });
 
 
                 break;

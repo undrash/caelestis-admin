@@ -94,7 +94,6 @@ export class ObjectCreateModal extends ViewComponent {
 
 
 
-
         const propertyInputs = document.getElementsByClassName( "property-value" );
 
         let properties = [];
@@ -107,8 +106,10 @@ export class ObjectCreateModal extends ViewComponent {
 
             if ( input.classList.contains( "property-value-date" ) ) {
 
-                if ( ! ( input as HTMLInputElement ).value ) {
-                    propVal.value = null;
+                if ( ( input as HTMLInputElement ).value ) {
+
+                    propVal.value = ( input as HTMLInputElement ).value;
+
                 }
 
             } else if ( input.classList.contains( "property-value-checkbox" ) ) {
@@ -137,6 +138,8 @@ export class ObjectCreateModal extends ViewComponent {
 
         }
 
+        console.log( "properties" );
+        console.log( properties );
 
         this.connection.createObject(
             {
