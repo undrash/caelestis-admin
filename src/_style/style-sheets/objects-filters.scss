@@ -1,0 +1,44 @@
+
+
+
+#objects-filters-title {
+  margin: 15px 0;
+  font-size: 22px;
+}
+
+#objects-filters-object-type-select {
+  margin-top: 10px;
+  width: 220px;
+  height: 30px;
+}
+
+
+#objects-filters-container {
+  margin: 25px 0;
+  min-height: 50px;
+  text-align: center;
+  line-height: 50px;
+  overflow: auto;
+  max-height: 300px;
+}
+
+
+#objects-filters-add-filter-btn {
+  float: left;
+  width: 150px;
+  height: 50px;
+}
+
+#objects-filters-remove-filter-btn {
+  float: left;
+  width: 150px;
+  height: 50px;
+  margin-left: 15px;
+}
+
+
+#objects-filters-search-btn {
+  float: right;
+  width: 150px;
+  height: 50px;
+}

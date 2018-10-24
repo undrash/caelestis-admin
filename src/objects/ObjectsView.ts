@@ -6,7 +6,6 @@ import { ObjectCreateModal } from "./ObjectCreateModal";
 import { INotification } from "../core/INotification";
 import { ViewComponent } from "../core/ViewComponent";
 import { ObjectsListing } from "./ObjectsListing";
-import { ObjectsFilter } from "./ObjectsFilter";
 import { ISignal } from "../core/ISignal";
 import { View } from "../core/View";
 
@@ -14,6 +13,7 @@ import { View } from "../core/View";
 // CSS
 import "../_style/style-sheets/objects-view.scss";
 import {ObjectEditModal} from "./ObjectEditModal";
+import {ObjectsFilters} from "./ObjectsFilters";
 
 // HTML
 const objectsViewTemplate = require("../_view-templates/objects-view.html");
@@ -24,12 +24,12 @@ const objectsViewTemplate = require("../_view-templates/objects-view.html");
 
 
 export class ObjectsView extends View {
-    private objectsFilter: ViewComponent;
+    private objectsFilters: ViewComponent;
     private objectsListing: ViewComponent;
     private objectCreateModal: ViewComponent;
     private objectEditModal: ViewComponent;
 
-    private objectsFilterContainer: HTMLElement;
+    private objectsFiltersContainer: HTMLElement;
     private objectsListingContainer: HTMLElement;
     private objectCreateModalContainer: HTMLElement;
     private objectEditModalContainer: HTMLElement;
@@ -49,12 +49,13 @@ export class ObjectsView extends View {
 
         this.objectsViewModalBackground = document.getElementById( "objects-view-modal-background" );
 
-        this.objectsFilterContainer     = document.getElementById( "objects-filter-container" );
+        this.objectsFiltersContainer    = document.getElementById( "objects-object-filters-container" );
         this.objectsListingContainer    = document.getElementById( "objects-object-listing-container" );
         this.objectCreateModalContainer = document.getElementById( "objects-object-create-modal-container" );
         this.objectEditModalContainer   = document.getElementById( "objects-object-edit-modal-container" );
 
-        this.objectsFilter      = new ObjectsFilter( this, this.objectsFilterContainer );
+
+        this.objectsFilters     = new ObjectsFilters( this, this.objectsFiltersContainer );
         this.objectsListing     = new ObjectsListing( this, this.objectsListingContainer );
         this.objectCreateModal  = new ObjectCreateModal( this, this.objectCreateModalContainer );
         this.objectEditModal    = new ObjectEditModal( this, this.objectEditModalContainer );
@@ -107,7 +108,7 @@ export class ObjectsView extends View {
 
         this.exitCallback = callback;
 
-        this.objectsFilter.exitScene( exitType );
+        this.objectsFilters.exitScene( exitType );
         this.objectsListing.exitScene( exitType );
         this.objectCreateModal.exitScene( exitType );
         this.objectEditModal.exitScene( exitType );
