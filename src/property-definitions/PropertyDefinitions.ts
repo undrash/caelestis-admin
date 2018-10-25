@@ -299,6 +299,26 @@ export class PropertyDefinitions extends ViewComponent {
     private dropDownMenuDeleteListener(e: any): void {
         console.info( "delete clicked" );
         this.dropdownMenuBackground.style.display = "none";
+
+        const deletePropDefId = this.activePropertyDef;
+        this.activePropertyDef = null;
+
+        this.connection.deletePropertyDefinition(
+            deletePropDefId,
+            (response: any) => {
+
+                const { message } = response;
+                console.info( message );
+
+                const listItem = document.getElementById( deletePropDefId );
+
+                listItem.parentElement.removeChild( listItem );
+
+            },
+            (message: string) => {
+                console.error( message );
+            }
+        )
     }
 
 

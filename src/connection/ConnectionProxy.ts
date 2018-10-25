@@ -68,6 +68,18 @@ export class ConnectionProxy extends CoreEntity {
 
 
 
+    public deletePropertyDefinition(id: string, success: Function, failure: Function): void {
+        this.httpRequest(
+            "DELETE",
+            "/api/v1/property-definitions/" + id,
+            null,
+            success,
+            failure
+        );
+    }
+
+
+
     public setPropertyDefinitionRequired(data: any, success: Function, failure: Function): void {
 
         this.httpRequest(
@@ -199,6 +211,18 @@ export class ConnectionProxy extends CoreEntity {
             success,
             failure
         )
+    }
+
+
+
+    public deleteObject(id: string, success: Function, failure: Function): void {
+        this.httpRequest(
+            "DELETE",
+            "/api/v1/objects/" + id,
+            null,
+            success,
+            failure
+        );
     }
 
 

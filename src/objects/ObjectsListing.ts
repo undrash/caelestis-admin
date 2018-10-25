@@ -113,6 +113,25 @@ export class ObjectsListing extends ViewComponent {
     private dropDownMenuDeleteListener(e: any): void {
         console.info( "delete clicked" );
         this.dropdownMenuBackground.style.display = "none";
+        const deleteObjectId = this.activeObject;
+        this.activeObject = null;
+
+        this.connection.deleteObject(
+            deleteObjectId,
+            (response: any) => {
+
+                const { message } = response;
+                console.info( message );
+
+                const listItem = document.getElementById( deleteObjectId );
+
+                listItem.parentElement.removeChild( listItem );
+
+            },
+            (message: string) => {
+                console.error( message );
+            }
+        )
     }
 
 
