@@ -228,16 +228,19 @@ export class ObjectEditModal extends ViewComponent {
                         (response: any) => {
                             const { objects } = response;
 
+                            console.log( objects );
+
+
                             if ( ! objects.length ) return;
 
                             propValInput.innerHTML = "";
-                            propValInput.add( initialOption );
+                            if ( initialOption ) propValInput.add( initialOption );
 
 
 
                             for ( let object of objects ) {
 
-                                if ( object._id === (initialOption as HTMLOptionElement).value ) continue;
+                                if ( initialOption && object._id === (initialOption as HTMLOptionElement).value ) continue;
 
                                 let option = document.createElement( "option" );
                                 option.value = object._id;
