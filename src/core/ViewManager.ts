@@ -10,6 +10,7 @@ import {MainMenuNotifications} from "../main-menu/MainMenuNotifications";
 import {ObjectTypesView} from "../object-types/ObjectTypesView";
 import {ObjectsView} from "../objects/ObjectsView";
 import {OptionsView} from "../options/OptionsView";
+import {AuthenticationView} from "../authentication/AuthenticationView";
 
 
 
@@ -28,8 +29,8 @@ export class ViewManager extends CoreEntity {
 
 
     private initView(): void {
-        this.mainMenuView = new MainMenuView();
-        this.currentView = new PropertyDefinitionsView();
+        this.mainMenuView   = new MainMenuView();
+        this.currentView    = new AuthenticationView();
     }
 
 

@@ -1,6 +1,7 @@
 
 
 #menu-container {
+  display: none;
   float: left;
   width: 300px;
   height: 100vh;
@@ -9,6 +10,6 @@
 
 #content-container {
   float: left;
-  width: calc(100% - 300px);
   height: 100vh;
+  width: 100%;
 }

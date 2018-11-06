@@ -466,6 +466,7 @@ export class PropertyDefinitions extends ViewComponent {
     }
 
 
+
     private parseDataType( datatype: number): string {
 
         let val: string = "";

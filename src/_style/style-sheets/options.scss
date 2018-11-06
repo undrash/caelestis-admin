@@ -41,6 +41,34 @@
   }
 
 
+  .options-item {
+    height: 30px;
+    width: 100%;
+    border-bottom: 1px solid lightgrey;
+    background-color: white;
+
+    &:hover {
+      background-color: $primary-color;
+      cursor: pointer;
+    }
+
+    .options-item-title {
+      float: left;
+      margin-left: 20px;
+      line-height: 30px;
+      display: inline;
+    }
+
+    .options-item-option-count {
+      float: right;
+      margin-right: 20px;
+      line-height: 30px;
+      display: inline;
+    }
+  }
+  
+  
+  
   #options-add-btn {
     position: absolute;
     right: 50px;

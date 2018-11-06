@@ -11,7 +11,8 @@ export class ConnectionProxy extends CoreEntity {
     constructor(proxyName: string) {
         super( proxyName );
 
-        this.address = "http://192.168.0.101:4200";
+        // this.address = "http://192.168.0.101:4200";
+        this.address = "http://localhost:4200";
     }
 
 
@@ -146,6 +147,20 @@ export class ConnectionProxy extends CoreEntity {
         );
 
 
+    }
+
+
+
+    public getOptions(success: Function, failure: Function): void {
+        console.info( "Proxy get options executed." );
+
+        this.httpRequest(
+            "GET",
+            "/api/v1/options/",
+            null,
+            success,
+            failure
+        );
     }
 
 

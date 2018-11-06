@@ -120,6 +120,10 @@ export class MainMenuView extends View {
 
     public handleNotification(notification: INotification): void {
 
+        // TODO: on user successful authentication => content container ==   width: calc(100% - 300px);
+        // TODO: also, menu container display goes to "block"
+
+
         switch ( notification.name ) {
 
 

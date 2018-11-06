@@ -19,6 +19,7 @@ const template = require( "../_view-templates/options.html" );
 
 export class Options extends ViewComponent {
 
+    private optionsContainer: HTMLElement;
 
 
     constructor(view: View, container: HTMLElement) {
@@ -27,6 +28,10 @@ export class Options extends ViewComponent {
 
 
         this.container.innerHTML = template;
+
+
+        this.optionsContainer = document.getElementById( "options-container" );
+
 
 
         this.enterScene();
@@ -50,7 +55,7 @@ export class Options extends ViewComponent {
 
     public enterScene(): void {
         this.registerEventListeners();
-
+        this.populate();
     }
 
 
@@ -62,6 +67,47 @@ export class Options extends ViewComponent {
         console.info( "exit being called in options" );
 
         this.view.componentExited( this.name );
+    }
+
+
+
+    private populate(): void {
+
+        this.connection.getOptions(
+            (response: any) => {
+
+                const { options } = response;
+
+                if ( options.length ) this.optionsContainer.innerHTML = "";
+
+                for ( let option of options ) {
+
+                    let optionItem = document.createElement( "div" );
+                    optionItem.id = option._id;
+                    optionItem.className = "options-item";
+
+                    let optionTitle = document.createElement( "p" );
+                    optionTitle.className = "options-item-title";
+                    optionTitle.innerHTML = option.name;
+
+                    let optionCount = document.createElement( "p" );
+                    optionCount.className = "options-item-option-count";
+                    optionCount.innerHTML = option.options.length;
+
+
+                    optionItem.appendChild( optionTitle );
+                    optionItem.appendChild( optionCount );
+
+                    this.optionsContainer.appendChild( optionItem );
+
+                }
+
+
+            },
+            (message: string) => {
+
+            }
+        )
     }
 
 }
