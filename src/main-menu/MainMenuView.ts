@@ -21,6 +21,7 @@ export class MainMenuView extends View {
 
     private menuItemPropDef: HTMLElement;
     private menuItemObjType: HTMLElement;
+    private menuItemOptions: HTMLElement;
     private menuItemObj: HTMLElement;
 
 
@@ -35,11 +36,13 @@ export class MainMenuView extends View {
 
         this.menuItemPropDef            = document.getElementById( "menu-item-property-definitions" );
         this.menuItemObjType            = document.getElementById( "menu-item-object-types" );
+        this.menuItemOptions            = document.getElementById( "menu-item-options" );
         this.menuItemObj                = document.getElementById( "menu-item-objects" );
 
 
         this.menuItemPropDefListener    = this.menuItemPropDefListener.bind( this );
         this.menuItemObjTypeListener    = this.menuItemObjTypeListener.bind( this );
+        this.menuItemOptionsListener    = this.menuItemOptionsListener.bind( this );
         this.menuItemObjListener        = this.menuItemObjListener.bind( this );
 
         this.enterScene();
@@ -52,6 +55,7 @@ export class MainMenuView extends View {
         this.menuItemPropDef.addEventListener( "click", this.menuItemPropDefListener );
         this.menuItemObjType.addEventListener( "click", this.menuItemObjTypeListener );
         this.menuItemObj.addEventListener( "click", this.menuItemObjListener );
+        this.menuItemOptions.addEventListener( "click", this.menuItemOptionsListener );
 
     }
 
@@ -62,7 +66,7 @@ export class MainMenuView extends View {
         this.menuItemPropDef.removeEventListener( "click", this.menuItemPropDefListener );
         this.menuItemObjType.removeEventListener( "click", this.menuItemObjTypeListener );
         this.menuItemObj.removeEventListener( "click", this.menuItemObjListener );
-
+        this.menuItemOptions.removeEventListener( "click", this.menuItemOptionsListener );
     }
 
 
@@ -83,6 +87,12 @@ export class MainMenuView extends View {
 
     private menuItemObjTypeListener(e: any): void {
         this.sendNotification( MainMenuNotifications.MENU_ITEM_OBJECT_TYPES );
+    }
+
+
+
+    private menuItemOptionsListener(e: any): void {
+        this.sendNotification( MainMenuNotifications.MENU_ITEM_OPTIONS );
     }
 
 

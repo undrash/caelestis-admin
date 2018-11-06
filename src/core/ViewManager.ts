@@ -9,6 +9,7 @@ import { View } from "./View";
 import {MainMenuNotifications} from "../main-menu/MainMenuNotifications";
 import {ObjectTypesView} from "../object-types/ObjectTypesView";
 import {ObjectsView} from "../objects/ObjectsView";
+import {OptionsView} from "../options/OptionsView";
 
 
 
@@ -53,6 +54,7 @@ export class ViewManager extends CoreEntity {
 
         notifications.push( MainMenuNotifications.MENU_ITEM_PROPERTY_DEFINITIONS );
         notifications.push( MainMenuNotifications.MENU_ITEM_OBJECT_TYPES );
+        notifications.push( MainMenuNotifications.MENU_ITEM_OPTIONS );
         notifications.push( MainMenuNotifications.MENU_ITEM_OBJECTS );
 
 
@@ -76,6 +78,15 @@ export class ViewManager extends CoreEntity {
             case MainMenuNotifications.MENU_ITEM_OBJECT_TYPES :
 
                 this.switchView( ObjectTypesView, null );
+
+                break;
+
+
+            case MainMenuNotifications.MENU_ITEM_OPTIONS :
+
+
+                this.switchView( OptionsView, null );
+
 
                 break;
 
