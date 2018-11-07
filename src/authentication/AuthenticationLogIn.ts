@@ -36,7 +36,8 @@ export class AuthenticationLogIn extends ViewComponent {
         this.signUpBtn          = document.getElementById( "authentication-log-in-sign-up" );
 
 
-        this.signUpBtnListener = this.signUpBtnListener.bind( this );
+        this.logInBtnListener   = this.logInBtnListener.bind( this );
+        this.signUpBtnListener  = this.signUpBtnListener.bind( this );
 
 
         this.enterScene()
@@ -46,6 +47,7 @@ export class AuthenticationLogIn extends ViewComponent {
 
     private registerEventListeners(): void {
 
+        this.logInBtn.addEventListener( "click", this.logInBtnListener );
         this.signUpBtn.addEventListener( "click", this.signUpBtnListener );
 
     }
@@ -54,7 +56,38 @@ export class AuthenticationLogIn extends ViewComponent {
 
     private unregisterEventListeners(): void {
 
+        this.logInBtn.removeEventListener( "click", this.logInBtnListener );
         this.signUpBtn.removeEventListener( "click", this.signUpBtnListener );
+
+    }
+
+
+
+    private logInBtnListener(e: any): void {
+        const email = this.emailInput.value;
+        const password = this.passwordInput.value;
+
+        console.log( "email: " + email );
+        console.log( "password: " + password );
+
+
+        this.connection.login(
+            {
+                email,
+                password
+            },
+            (response: any) => {
+
+                console.log( response );
+
+                this.view.sendNotification( AuthenticationNotifications.AUTH_USER_LOGGED_IN );
+
+
+            },
+            (message: string) => {
+                console.error( message );
+            }
+        )
 
     }
 

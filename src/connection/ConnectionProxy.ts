@@ -5,6 +5,7 @@ import {IPropertyDefinition} from "./models/IPropertyDefinition";
 
 export class ConnectionProxy extends CoreEntity {
     private address: string;
+    private static token: string;
 
 
 
@@ -14,6 +15,40 @@ export class ConnectionProxy extends CoreEntity {
         // this.address = "http://192.168.0.101:4200";
         this.address = "http://localhost:4200";
     }
+
+
+
+    public login(data: any, success:Function, failure: Function): void {
+
+        let xhr = new XMLHttpRequest();
+
+        xhr.open( "POST", this.address + "/api/v1/authentication/login", true );
+        xhr.setRequestHeader('Content-type', 'application/json');
+        xhr.onload = () => {
+            let response = JSON.parse( xhr.responseText );
+
+
+            if ( response.success ) {
+
+
+                ConnectionProxy.token = response.tokenData.token;
+
+                if ( success ) success( response );
+
+            } else {
+
+                if ( failure ) failure( response.message );
+            }
+        };
+
+        if ( data ) {
+            xhr.send( JSON.stringify( data ) );
+        } else {
+            xhr.send();
+        }
+
+    }
+
 
 
     public getPropertyDefinitions(success: Function, failure: Function): void {
@@ -89,7 +124,7 @@ export class ConnectionProxy extends CoreEntity {
             data,
             success,
             failure
-        )
+        );
 
     }
 
@@ -260,6 +295,8 @@ export class ConnectionProxy extends CoreEntity {
 
         xhr.open( method, this.address + endpoint, true );
         xhr.setRequestHeader('Content-type', 'application/json');
+        xhr.setRequestHeader('Authorization', ConnectionProxy.token );
+
         xhr.onload = () => {
             let response = JSON.parse( xhr.responseText );
 

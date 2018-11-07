@@ -8,6 +8,7 @@ import { View } from "../core/View";
 // CSS
 import "../_style/style-sheets/main-menu.scss";
 import {MainMenuNotifications} from "./MainMenuNotifications";
+import {AuthenticationNotifications} from "../authentication/AuthenticationNotifications";
 
 // HTML template
 const template = require("../_view-templates/main-menu.html" );
@@ -74,6 +75,8 @@ export class MainMenuView extends View {
     public listNotificationInterests(): string[] {
         let notifications = super.listNotificationInterests();
 
+        notifications.push( AuthenticationNotifications.AUTH_USER_LOGGED_IN );
+
         return notifications;
     }
 
@@ -120,12 +123,14 @@ export class MainMenuView extends View {
 
     public handleNotification(notification: INotification): void {
 
-        // TODO: on user successful authentication => content container ==   width: calc(100% - 300px);
-        // TODO: also, menu container display goes to "block"
-
-
         switch ( notification.name ) {
 
+            case AuthenticationNotifications.AUTH_USER_LOGGED_IN :
+
+                document.getElementById( SystemConstants.MAIN_CONTAINER ).style.width = "calc(100% - 300px)";
+                document.getElementById( SystemConstants.MAIN_MENU_CONTAINER ).style.display = "block";
+
+                break;
 
 
             default :
