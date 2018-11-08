@@ -34,6 +34,8 @@ export class PropertyDefinitions extends ViewComponent {
     private modalPropDataType: HTMLSelectElement;
     private modalPropObjectType: HTMLSelectElement;
     private modalObjectTypeContainer: HTMLElement;
+    private modalPropOptions: HTMLSelectElement;
+    private modalOptionsContainer: HTMLElement;
 
     private dropdownMenuBackground: HTMLElement;
     private dropdownMenu: HTMLElement;
@@ -64,8 +66,10 @@ export class PropertyDefinitions extends ViewComponent {
         this.modalPropName              = document.getElementById("pd-modal-input-name") as HTMLInputElement;
         this.modalPropDataType          = document.getElementById("pd-modal-select-data-type") as HTMLSelectElement;
         this.modalPropObjectType        = document.getElementById("pd-modal-select-object-type" ) as HTMLSelectElement;
+        this.modalPropOptions           = document.getElementById("pd-modal-select-options" ) as HTMLSelectElement;
 
         this.modalObjectTypeContainer   = document.getElementById("pd-modal-object-type-container" );
+        this.modalOptionsContainer      = document.getElementById("pd-modal-options-container" );
 
         this.modalCancelBtn             = document.getElementById( "pd-modal-add-cancel" ) as HTMLButtonElement;
         this.modalOKBtn                 = document.getElementById( "pd-modal-add-ok" ) as HTMLButtonElement;
@@ -227,6 +231,22 @@ export class PropertyDefinitions extends ViewComponent {
 
                 }
 
+                if ( propertyDef.dataType === PropertyDefinitionDatatypes.OPTION ) {
+
+                    this.connection.getOptionsById(
+                        propertyDef.options,
+                        (response: any) => {
+                            const { options } = response;
+
+                            propDefType.innerHTML += " - " + options.name;
+                        },
+                        (message: string) => {
+                            console.error( message );
+                        }
+                    )
+
+                }
+
 
             },
             (message: string) => {
@@ -266,8 +286,36 @@ export class PropertyDefinitions extends ViewComponent {
                 console.warn( message );
             });
 
+        } else if ( selectValue === PropertyDefinitionDatatypes.OPTION ) {
+
+            this.modalOptionsContainer.style.display = "block";
+
+
+            this.connection.getOptions(
+                (response: any) => {
+                    const { options } = response;
+
+                    for ( let option of options ) {
+
+                        let optionElement = document.createElement( "option" );
+                        optionElement.text = option.name;
+                        optionElement.value = option._id;
+
+
+                        this.modalPropOptions.add( optionElement );
+
+                    }
+
+                },
+                (message: string) => {
+                    console.warn( message );
+                }
+            )
+
+
         } else {
             this.modalObjectTypeContainer.style.display = "none";
+            this.modalOptionsContainer.style.display = "none";
         }
 
     }
@@ -429,6 +477,22 @@ export class PropertyDefinitions extends ViewComponent {
 
                     }
 
+                    if ( properties[i].dataType === PropertyDefinitionDatatypes.OPTION ) {
+
+                        this.connection.getOptionsById(
+                            properties[i].options,
+                            (response: any) => {
+                                const { options } = response;
+
+                                propDefType.innerHTML += " - " + options.name;
+                            },
+                            (message: string) => {
+                                console.error( message );
+                            }
+                        )
+
+                    }
+
                 }
             },
             (message: string) => {
@@ -451,12 +515,25 @@ export class PropertyDefinitions extends ViewComponent {
                 name,
                 dataType,
                 this.modalPropObjectType.options[ this.modalPropObjectType.selectedIndex ].value,
+                null,
                 []
             )
+
+        } else if ( dataType === PropertyDefinitionDatatypes.OPTION ) {
+
+            return new PropertyDefinition(
+                name,
+                dataType,
+                null,
+                this.modalPropOptions.options[ this.modalPropOptions.selectedIndex ].value,
+                []
+            )
+
         } else {
             return new PropertyDefinition(
                 name,
                 dataType,
+                null,
                 null,
                 []
             )
@@ -491,6 +568,10 @@ export class PropertyDefinitions extends ViewComponent {
 
             case PropertyDefinitionDatatypes.LOOKUP :
                 val = "LOOKUP";
+                break;
+
+            case PropertyDefinitionDatatypes.OPTION :
+                val = "OPTION";
                 break;
 
             default :

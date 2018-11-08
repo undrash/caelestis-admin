@@ -203,6 +203,18 @@ export class ConnectionProxy extends CoreEntity {
 
 
 
+    public getOptionsById(id: string, success: Function, failure: Function): void {
+        this.httpRequest(
+            "GET",
+            "/api/v1/options/" + id,
+            null,
+            success,
+            failure
+        );
+    }
+
+
+
     public getObjects(success: Function, failure: Function): void {
 
         this.httpRequest(

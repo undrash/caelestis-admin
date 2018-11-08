@@ -668,12 +668,14 @@ export class ObjectTypes extends ViewComponent {
                 name,
                 dataType,
                 this.modalNewPDObjectTypeSelect.options[ this.modalNewPDObjectTypeSelect.selectedIndex ].value,
+                null,
                 []
             )
         } else {
             return new PropertyDefinition(
                 name,
                 dataType,
+                null,
                 null,
                 []
             )
