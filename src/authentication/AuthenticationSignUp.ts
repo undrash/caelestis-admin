@@ -42,7 +42,9 @@ export class AuthenticationSignUp extends ViewComponent {
         this.backToLogInBtn     = document.getElementById( "authentication-sign-up-back-to-log-in" );
 
 
+        this.signUpBtnListener      = this.signUpBtnListener.bind( this );
         this.backToLogInBtnListener = this.backToLogInBtnListener.bind( this );
+
 
         this.enterScene()
     }
@@ -51,6 +53,7 @@ export class AuthenticationSignUp extends ViewComponent {
 
     private registerEventListeners(): void {
 
+        this.signUpBtn.addEventListener( "click", this.signUpBtnListener );
         this.backToLogInBtn.addEventListener( "click", this.backToLogInBtnListener );
 
     }
@@ -59,8 +62,40 @@ export class AuthenticationSignUp extends ViewComponent {
 
     private unregisterEventListeners(): void {
 
+        this.signUpBtn.removeEventListener( "click", this.signUpBtnListener );
         this.backToLogInBtn.removeEventListener( "click", this.backToLogInBtnListener );
 
+    }
+
+
+
+    private signUpBtnListener(e: any): void {
+        const firstName = this.firstNameInput.value;
+        const lastName = this.lastNameInput.value;
+        const email = this.emailInput.value;
+        const password = this.passwordInput.value;
+        const language = this.languageSelect.options[ this.languageSelect.selectedIndex ].value;
+
+
+
+        this.connection.signUp(
+            {
+                firstName,
+                lastName,
+                email,
+                password,
+                language
+            },
+            (response: any) => {
+
+                console.info( response );
+
+                this.view.sendNotification( AuthenticationNotifications.AUTH_USER_SIGNED_UP );
+            },
+            (message: string) => {
+                console.error( message );
+            }
+        )
     }
 
 

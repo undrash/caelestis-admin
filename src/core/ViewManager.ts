@@ -56,6 +56,7 @@ export class ViewManager extends CoreEntity {
 
         notifications.push( MainMenuNotifications.MENU_ITEM_PROPERTY_DEFINITIONS );
         notifications.push( AuthenticationNotifications.AUTH_USER_LOGGED_IN );
+        notifications.push( AuthenticationNotifications.AUTH_USER_SIGNED_UP );
         notifications.push( MainMenuNotifications.MENU_ITEM_OBJECT_TYPES );
         notifications.push( MainMenuNotifications.MENU_ITEM_OPTIONS );
         notifications.push( MainMenuNotifications.MENU_ITEM_OBJECTS );
@@ -73,6 +74,13 @@ export class ViewManager extends CoreEntity {
         switch ( notification.name ) {
 
             case AuthenticationNotifications.AUTH_USER_LOGGED_IN :
+
+                this.switchView( PropertyDefinitionsView, null );
+
+                break;
+
+
+            case AuthenticationNotifications.AUTH_USER_SIGNED_UP :
 
                 this.switchView( PropertyDefinitionsView, null );
 

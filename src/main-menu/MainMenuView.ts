@@ -76,6 +76,7 @@ export class MainMenuView extends View {
         let notifications = super.listNotificationInterests();
 
         notifications.push( AuthenticationNotifications.AUTH_USER_LOGGED_IN );
+        notifications.push( AuthenticationNotifications.AUTH_USER_SIGNED_UP );
 
         return notifications;
     }
@@ -121,14 +122,26 @@ export class MainMenuView extends View {
 
 
 
+    private displayMenu(): void {
+        document.getElementById( SystemConstants.MAIN_CONTAINER ).style.width = "calc(100% - 300px)";
+        document.getElementById( SystemConstants.MAIN_MENU_CONTAINER ).style.display = "block";
+    }
+
+
+
     public handleNotification(notification: INotification): void {
 
         switch ( notification.name ) {
 
             case AuthenticationNotifications.AUTH_USER_LOGGED_IN :
 
-                document.getElementById( SystemConstants.MAIN_CONTAINER ).style.width = "calc(100% - 300px)";
-                document.getElementById( SystemConstants.MAIN_MENU_CONTAINER ).style.display = "block";
+                this.displayMenu();
+
+                break;
+
+            case AuthenticationNotifications.AUTH_USER_SIGNED_UP :
+
+                this.displayMenu();
 
                 break;
 

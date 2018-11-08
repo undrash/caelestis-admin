@@ -20,32 +20,35 @@ export class ConnectionProxy extends CoreEntity {
 
     public login(data: any, success:Function, failure: Function): void {
 
-        let xhr = new XMLHttpRequest();
-
-        xhr.open( "POST", this.address + "/api/v1/authentication/login", true );
-        xhr.setRequestHeader('Content-type', 'application/json');
-        xhr.onload = () => {
-            let response = JSON.parse( xhr.responseText );
-
-
-            if ( response.success ) {
-
-
+        this.httpRequest(
+            "POST",
+            "/api/v1/authentication/login",
+            data,
+            (response: any) => {
                 ConnectionProxy.token = response.tokenData.token;
 
-                if ( success ) success( response );
+                success( response );
+            },
+            failure
+        )
 
-            } else {
+    }
 
-                if ( failure ) failure( response.message );
-            }
-        };
 
-        if ( data ) {
-            xhr.send( JSON.stringify( data ) );
-        } else {
-            xhr.send();
-        }
+
+    public signUp(data: any, success:Function, failure: Function): void {
+
+        this.httpRequest(
+            "POST",
+            "/api/v1/authentication/sign-up",
+            data,
+            (response: any) => {
+                ConnectionProxy.token = response.tokenData.token;
+
+                success( response );
+            },
+            failure
+        )
 
     }
 
@@ -295,7 +298,7 @@ export class ConnectionProxy extends CoreEntity {
 
         xhr.open( method, this.address + endpoint, true );
         xhr.setRequestHeader('Content-type', 'application/json');
-        xhr.setRequestHeader('Authorization', ConnectionProxy.token );
+        if ( ConnectionProxy.token ) xhr.setRequestHeader('Authorization', ConnectionProxy.token );
 
         xhr.onload = () => {
             let response = JSON.parse( xhr.responseText );
