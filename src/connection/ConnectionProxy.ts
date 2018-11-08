@@ -298,11 +298,12 @@ export class ConnectionProxy extends CoreEntity {
 
         xhr.open( method, this.address + endpoint, true );
         xhr.setRequestHeader('Content-type', 'application/json');
+        xhr.setRequestHeader('Accept', 'application/json');
         if ( ConnectionProxy.token ) xhr.setRequestHeader('Authorization', ConnectionProxy.token );
 
         xhr.onload = () => {
-            let response = JSON.parse( xhr.responseText );
 
+            let response = JSON.parse( xhr.responseText );
 
             if ( response.success ) {
 
