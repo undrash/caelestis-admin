@@ -30,7 +30,7 @@ export class Options extends ViewComponent {
         this.container.innerHTML = template;
 
 
-        this.optionsContainer = document.getElementById( "options-container" );
+        this.optionsContainer = document.getElementById( "options-list-container" );
 
 
 

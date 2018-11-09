@@ -7,15 +7,20 @@ import { ViewComponent } from "../core/ViewComponent";
 import { ISignal } from "../core/ISignal";
 import { View } from "../core/View";
 import {Options} from "./Options";
+import {OptionsCreateModal} from "./OptionsCreateModal";
 
 
 
 
+// HTML
+const optionsViewTemplate = require("../_view-templates/options-view.html");
 
 
 export class OptionsView extends View {
     private options: ViewComponent;
     private optionsContainer: HTMLElement;
+    private optionsCreateModal: ViewComponent;
+    private optionsCreateModalContainer: HTMLElement;
 
 
 
@@ -27,13 +32,16 @@ export class OptionsView extends View {
 
         document.getElementById( SystemConstants.MAIN_CONTAINER ).appendChild( this.container );
 
+        this.container.innerHTML = optionsViewTemplate;
 
-        this.optionsContainer = document.createElement( "div" );
+        this.optionsContainer               = document.getElementById( "options-container" );
+        this.optionsCreateModalContainer    = document.getElementById( "create-options-container" );
 
         this.container.appendChild( this.optionsContainer );
 
 
         this.options = new Options( this, this.optionsContainer );
+        this.optionsCreateModal = new OptionsCreateModal( this, this.optionsCreateModalContainer );
 
     }
 
@@ -52,6 +60,7 @@ export class OptionsView extends View {
 
 
         this.options.exitScene( exitType );
+        this.optionsCreateModal.exitScene( exitType );
 
     }
 

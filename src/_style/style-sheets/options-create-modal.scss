@@ -1,0 +1,142 @@
+
+
+@import "color-variables";
+
+
+
+
+
+
+  #options-create-modal {
+    position: absolute;
+    z-index: 1;
+    background-color: white;
+    padding: 40px;
+    width: 380px;
+    -webkit-box-shadow: -2px 11px 29px -12px rgba(0, 0, 0, 0.61);
+    -moz-box-shadow: -2px 11px 29px -12px rgba(0, 0, 0, 0.61);
+    box-shadow: -2px 11px 29px -12px rgba(0, 0, 0, 0.61);
+    left: calc(50% - 190px);
+    top: 20%;
+
+
+    #options-create-modal-title {
+      font-size: 20px;
+      margin-top: 10px;
+    }
+
+
+    #options-create-name-input-container {
+      margin-top: 15px;
+
+
+      #options-create-name-input {
+        margin-top: 10px;
+        height: 40px;
+        width: 300px;
+        padding-left: 10px;
+
+      }
+    }
+
+
+    #options-create-option-items-label {
+      margin: 10px 0;
+    }
+
+
+    #options-create-option-items-container {
+      border: 1px solid black;
+      overflow: auto;
+      padding: 5px;
+      width: 300px;
+      margin-bottom: 15px;
+
+      .options-create-option-item {
+        padding: 5px;
+
+        .options-create-option-item-checkbox {
+          -webkit-appearance: checkbox;
+          padding: 0;
+          height: 20px;
+          width: 20px;
+        }
+
+        .options-create-option-item-title {
+          position: relative;
+          top: -3px;
+        }
+
+      }
+
+    }
+
+    #options-create-option-btn {
+      display: block;
+      margin: 5px 0;
+      height: 45px;
+      width: 300px;
+    }
+
+    #options-create-edit-option-btn {
+      display: inline-block;
+      margin: 5px 0;
+      height: 35px;
+      width: 145px;
+      float: right;
+    }
+
+    #options-create-delete-option-btn {
+      display: inline-block;
+      margin: 5px 0;
+      height: 35px;
+      width: 145px;
+      float: left;
+    }
+
+    #options-create-footer-buttons-container {
+      clear: both;
+      width: 285px;
+      margin: 75px auto auto;
+
+      #options-create-cancel-btn {
+        height: 45px;
+        width: 140px;
+        border: none;
+
+        &:hover {
+          background-color: grey;
+          color: white;
+        }
+
+      }
+
+      #options-create-ok-btn {
+        height: 45px;
+        width: 140px;
+        border: none;
+
+
+        &:hover {
+          background-color: grey;
+          color: white;
+        }
+
+      }
+
+    }
+
+  }
+
+
+
+#options-create-modal-background {
+  background-color: white;
+  opacity: 0.5;
+  position: absolute;
+  width: 100vw;
+  top: 0;
+  height: 100vh;
+  left: 0;
+
+}
